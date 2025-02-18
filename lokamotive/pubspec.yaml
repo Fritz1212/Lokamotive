@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  rive: 0.13.20
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -59,6 +60,7 @@ flutter:
   uses-material-design: true
   assets: 
     - Assets/LokaMotive-logo2.png
+    - Assets/untitled.riv
 
   # To add assets to your application, add an assets section, like this:
   # assets:
