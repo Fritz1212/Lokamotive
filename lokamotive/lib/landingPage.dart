@@ -7,7 +7,7 @@ class FadeInWidget extends StatefulWidget {
   @override
   State<FadeInWidget> createState() => _FadeIn();
 }
-
+  
 class _FadeIn extends State<FadeInWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 

@@ -35,6 +35,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  http: ^1.3.0
 
 dev_dependencies:
   flutter_test:
@@ -58,7 +59,14 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets: 
-    - Assets/LokaMotive-logo2.png
+    - assets/test.png
+    - assets/iconspng/backRutePage.png
+    - assets/iconspng/locationIconRutePage.png
+    - assets/iconspng/searchIconRutePage.png
+    - assets/iconspng/backMapPage.png
+    - assets/iconspng/navIconMapPage.png
+    - assets/iconspng/krlIcon.png
+    - assets/iconspng/tjIcon.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
