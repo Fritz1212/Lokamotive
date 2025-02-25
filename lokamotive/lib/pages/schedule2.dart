@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lokamotive_schedule/pages/schedule3.dart';
 import 'schedule1.dart';
 
 class Schedule2 extends StatelessWidget {
@@ -78,10 +79,55 @@ class ReturnButton extends StatelessWidget {
   }
 }
 
-class TimePickerButton extends StatelessWidget {
-  final Function(BuildContext) onTimePicked;
+class TimePickerScreen extends StatefulWidget {
+  final String labelText; // Parameter untuk teks label
 
-  const TimePickerButton({super.key, required this.onTimePicked});
+  const TimePickerScreen({super.key, required this.labelText});
+
+  @override
+  _TimePickerScreenState createState() => _TimePickerScreenState();
+}
+
+class _TimePickerScreenState extends State<TimePickerScreen> {
+  TimeOfDay? _selectedTime; // State untuk menyimpan waktu yang dipilih
+
+  // Fungsi untuk menampilkan TimePicker
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime ?? TimeOfDay.now(), // Waktu awal yang ditampilkan
+    );
+
+    if (pickedTime != null && pickedTime != _selectedTime) {
+      setState(() {
+        _selectedTime = pickedTime; // Perbarui state dengan waktu yang dipilih
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: TimePickerButton(
+        labelText: widget.labelText, // Teruskan labelText ke TimePickerButton
+        selectedTime: _selectedTime, // Waktu yang dipilih
+        onTimePicked: () => _selectTime(context), // Panggil fungsi _selectTime
+      ),
+    );
+  }
+}
+
+class TimePickerButton extends StatelessWidget {
+  final String labelText; // Parameter untuk teks label
+  final TimeOfDay? selectedTime; // Parameter untuk waktu yang dipilih
+  final VoidCallback onTimePicked; // Callback untuk membuka TimePicker
+
+  const TimePickerButton({
+    super.key,
+    required this.labelText,
+    required this.selectedTime,
+    required this.onTimePicked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -89,11 +135,9 @@ class TimePickerButton extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.35,
       height: MediaQuery.of(context).size.height * 0.06,
       child: ElevatedButton(
-        onPressed: () {
-          onTimePicked(context);
-        },
+        onPressed: onTimePicked, // Panggil callback untuk membuka TimePicker
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(30, 34, 84, 119),
+          backgroundColor: const Color.fromARGB(30, 34, 84, 119),
           shadowColor: Colors.blue,
           elevation: 0,
           surfaceTintColor: Colors.blue,
@@ -106,21 +150,46 @@ class TimePickerButton extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * 0.02,
-              child: Text(
-                "From",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300,
-                ),
-              ),
+              width: MediaQuery.of(context).size.width * 0.35,
+              height: MediaQuery.of(context).size.height * 0.025,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    labelText, // Tampilkan teks label di sini
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              )
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.04,
-              color: Colors.green,
-            )
+              // Tampilkan waktu yang dipilih di sini
+              height: MediaQuery.of(context).size.height * 0.035,
+              child: selectedTime != null
+                  ? Text(
+                      selectedTime!.format(context), // Format waktu yang dipilih
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    )
+                  : const Text(
+                      "Choose Time", // Teks default jika waktu belum dipilih
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey,
+                      ),
+                    ),
+            ),
           ],
-        )
+        ),
       ),
     );
   }
@@ -135,18 +204,6 @@ class SearchSchedule extends StatefulWidget {
 
 class _SearchScheduleState extends State<SearchSchedule> {
   TimeOfDay? selectedTime;
-
-  void _pickTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null && picked != selectedTime) {
-      setState(() {
-        selectedTime = picked;
-      });
-    }
-  }
 
   void scheduleTrain2(BuildContext context) {
     showModalBottomSheet(
@@ -184,7 +241,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Pilih Jadwal Kereta",
+                                "Choose Train Schedule",
                                 style: TextStyle(
                                   fontSize: 17,
                                   color: Colors.black,
@@ -218,7 +275,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                     ),
                                   ),
                                   const Text(
-                                    "1 Hari ini",
+                                    "1 Today",
                                     style: TextStyle(fontSize: 15, color: Colors.black),
                                   ),
                                 ],
@@ -248,7 +305,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                       ),
                                     ),
                                   const Text(
-                                    "Atur Jadwal Sendiri",
+                                    "Set Your Own Schedule",
                                     style: TextStyle(fontSize: 15, color: Colors.black),
                                   ),
                                 ],
@@ -266,14 +323,11 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                 children: [
                                   Container(
                                     width: MediaQuery.of(context).size.width * 0.35,
-                                    child: TimePickerButton(onTimePicked: _pickTime),
+                                    child: const TimePickerScreen(labelText: "From",),
                                   ),
                                   Container(
                                     width: MediaQuery.of(context).size.width * 0.35,
-                                    decoration: const BoxDecoration(
-                                      color: Color.fromARGB(30, 34, 84, 119),
-                                      borderRadius: BorderRadius.all(Radius.circular(10))
-                                    ),
+                                    child: const TimePickerScreen(labelText: "Until",),
                                   )
                                 ],
                               ),
@@ -286,7 +340,18 @@ class _SearchScheduleState extends State<SearchSchedule> {
                               height: MediaQuery.of(context).size.height * 0.06,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.of(context).pop();
+                                  Navigator.of(context).push(PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => Schedule3(),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      return SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: const Offset(1.0, 0.0), // Mulai dari kiri
+                                          end: Offset.zero,
+                                        ).animate(animation),
+                                        child: child,
+                                      );
+                                    },
+                                  ));
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF225477),
@@ -295,7 +360,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                   ),
                                 ),
                                 child: const Text(
-                                  "Pilih",
+                                  "Apply",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white

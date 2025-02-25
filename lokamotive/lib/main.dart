@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lokamotive_schedule/pages/ScheduleYoga.dart';
 import 'package:lokamotive_schedule/pages/Tes2.dart';
+import 'package:lokamotive_schedule/pages/schedule1.dart';
 import 'pages/schedule2.dart';
 import 'pages/schedule3.dart';
 import 'pages/schedule4.dart';
@@ -18,7 +19,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Schedule2(),
+      home: Schedule5(),
     );
   }
 }
