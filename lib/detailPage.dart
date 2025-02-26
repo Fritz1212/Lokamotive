@@ -46,7 +46,15 @@ class detailPage extends StatelessWidget {
                   height: 100,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.red,
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -75,15 +83,15 @@ class detailPage extends StatelessWidget {
                           Container(
                             width: 250,
                             height: 30,
-                            color: Colors.blue,
+                            color: Colors.white,
                             child: Row(
                               children: [
                                 Text(
                                   "Rumah Talenta BCA",
                                   style: TextStyle(
                                       fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black),
                                 ),
                               ],
                             ),
@@ -103,15 +111,15 @@ class detailPage extends StatelessWidget {
                           Container(
                             width: 250,
                             height: 30,
-                            color: Colors.blue,
+                            color: Colors.white,
                             child: Row(
                               children: [
                                 Text(
                                   "Indonesia Arena",
                                   style: TextStyle(
                                       fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black),
                                 ),
                               ],
                             ),
@@ -124,6 +132,27 @@ class detailPage extends StatelessWidget {
               ],
             ),
           ),
+          Positioned(
+            top: 420,
+            left: 20,
+            child: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: CircleBorder(),
+                ),
+                child: Icon(Icons.arrow_back, color: Colors.black),
+              ),
+            ),
+          ),
+
           Positioned.fill(
               child: Align(
             alignment: Alignment.bottomCenter,
@@ -216,27 +245,34 @@ class detailPage extends StatelessWidget {
                         ),
 
                         SizedBox(height: 20),
-
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 34, 84, 119),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ), // End of RoundedRectangleBorder
-                            minimumSize: Size(350, 60),
-                          ), // End of ElevatedButton.styleFrom
-                          child: Text("Done",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white)),
-                        ), // End of ElevatedButton
                       ], // End of Column children
                     ), // End of Column
                   ), // End of SingleChildScrollView
                 ); // End of Container
               }, // End of builder
             ), // End of DraggableScrollableSheet
-          )), // End of Positioned
+          )),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 20),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 34, 84, 119),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ), // End of RoundedRectangleBorder
+                    minimumSize: Size(350, 60),
+                  ), // End of ElevatedButton.styleFrom
+                  child: Text("Done",
+                      style: TextStyle(fontSize: 20, color: Colors.white)),
+                ), // End of ElevatedButton
+              ),
+            ]),
+          ]),
+
+          // End of Positioned
         ],
       )),
     );
