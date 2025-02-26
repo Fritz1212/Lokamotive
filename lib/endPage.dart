@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class endPage extends StatelessWidget {
   const endPage({super.key});
 
@@ -19,32 +18,27 @@ class endPage extends StatelessWidget {
               width: 450,
               height: 450,
               child: RiveAnimation.asset(
-                'Assets/animasi_end.riv',
+                'assets/animasi_end.riv',
                 fit: BoxFit.cover,
               ),
-            ),  
+            ),
             Text(
               "Anda Telah Sampai Tujuan !",
               style: GoogleFonts.inter(
-                  color: Color.fromARGB(500, 34, 84, 119),
-                  fontSize: 22,
+                color: Color.fromARGB(500, 34, 84, 119),
+                fontSize: 22,
               ),
             ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/third');
-                },
-                child: Text(
-                  "Detail",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
-                  )
-                ),
-              )
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/third');
+              },
+              child: Text("Detail",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            )
           ],
-          ),
         ),
-        );
+      ),
+    );
   }
 }
