@@ -69,16 +69,16 @@ class InfoTrain extends StatelessWidget {
     return Positioned(  
       child: Center(
         child: Transform.translate(
-          offset: Offset(0, MediaQuery.of(context).size.height / 100 - 35),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.54,
+          offset: Offset(0, MediaQuery.of(context).size.height / 100 - 20),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
             height: MediaQuery.of(context).size.height * 0.14,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.44,
+                  width: MediaQuery.of(context).size.width * 0.65,
                   height: MediaQuery.of(context).size.height * 0.03,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +93,7 @@ class InfoTrain extends StatelessWidget {
                             Text(
                               "Bogor",
                               style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 15, 
                                 fontWeight: FontWeight.w400,
                                 color: Color(0xFFFFFFFF)
                               ),
@@ -102,7 +102,7 @@ class InfoTrain extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.04,
+                        width: MediaQuery.of(context).size.width * 0.03,
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.07,
@@ -110,7 +110,7 @@ class InfoTrain extends StatelessWidget {
                         child: Image.asset("assets/Vector(5).png"),
                       ), 
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.04,
+                        width: MediaQuery.of(context).size.width * 0.03,
                       ),
                       Container(
                         padding: const EdgeInsets.all(2),
@@ -161,6 +161,138 @@ class InfoTrain extends StatelessWidget {
     );
   }
 }
+
+class TrainScheduleCard extends StatelessWidget {
+  final String trainNumber;
+  final String departureTime;
+
+  const TrainScheduleCard({
+    super.key,
+    required this.trainNumber,
+    required this.departureTime,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () {
+              Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => Schedule5(),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(1.0, 0.0),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                },
+              ));
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.87,
+              height: MediaQuery.of(context).size.height * 0.065,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFBBD8A),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.07),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.61,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.03,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "KRL",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.035,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.047,
+                                child: Image.asset("assets/Vector(4).png"),
+                              ),
+                              SizedBox(width: MediaQuery.of(context).size.width * 0.012),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.55,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "#$trainNumber",
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF225477),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.12,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          departureTime,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF225477),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.07,
+                    child: Image.asset("assets/Vector(2).png"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+      ],
+    );
+  }
+}
  
 class TrainSchedule extends StatelessWidget {
   const TrainSchedule({super.key});
@@ -169,383 +301,19 @@ class TrainSchedule extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.67,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.87, 
-            height: MediaQuery.of(context).size.height * 0.065,
-            decoration: const BoxDecoration(
-              color:Color(0xFFFBBD8A),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(12),
-                bottomRight: Radius.circular(12),
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12)
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.07,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.61,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.03,
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              "KRL",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.035,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.047,
-                              child: Image.asset("assets/Vector(4).png"),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.012,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.55,
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "#1027",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xFF225477)
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.12,
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "12.25",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xFF225477)
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.07,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      shadowColor: Colors.transparent,
-                      backgroundColor: Colors.transparent,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => Schedule5(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(1.0, 0.0), // Mulai dari kanan
-                              end: Offset.zero,
-                            ).animate(animation),
-                            child: child,
-                          );
-                        },
-                      ));
-                    },
-                    child: Image.asset("assets/Vector(2).png"),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.03,
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.87, 
-            height: MediaQuery.of(context).size.height * 0.065,
-            decoration: const BoxDecoration(
-              color:Color(0xFFFBBD8A),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(12),
-                bottomRight: Radius.circular(12),
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12)
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.07,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.61,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.03,
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              "KRL",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.035,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.047,
-                              child: Image.asset("assets/Vector(4).png"),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.012,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.55,
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "#1027",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xFF225477)
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.12,
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "12.25",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xFF225477)
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.07,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      shadowColor: Colors.transparent,
-                      backgroundColor: Colors.transparent,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => Schedule5(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(1.0, 0.0), // Mulai dari kanan
-                              end: Offset.zero,
-                            ).animate(animation),
-                            child: child,
-                          );
-                        },
-                      ));
-                    },
-                    child: Image.asset("assets/Vector(2).png"),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.03,
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.87, 
-            height: MediaQuery.of(context).size.height * 0.065,
-            decoration: const BoxDecoration(
-              color:Color(0xFFFBBD8A),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(12),
-                bottomRight: Radius.circular(12),
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12)
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.07,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.61,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.03,
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              "KRL",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.035,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.047,
-                              child: Image.asset("assets/Vector(4).png"),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.012,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.55,
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "#1027",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xFF225477)
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.12,
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "12.25",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xFF225477)
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.07,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      shadowColor: Colors.transparent,
-                      backgroundColor: Colors.transparent,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => Schedule5(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(1.0, 0.0), // Mulai dari kanan
-                              end: Offset.zero,
-                            ).animate(animation),
-                            child: child,
-                          );
-                        },
-                      ));
-                    },
-                    child: Image.asset("assets/Vector(2).png"),
-                  ),
-                ),
-              ],
-            ),
-          ),
+      height: MediaQuery.of(context).size.height * 0.7, 
+      child: ListView(
+        children: const [
+          TrainScheduleCard(trainNumber: "1025", departureTime: "12.25"),
+          TrainScheduleCard(trainNumber: "1027", departureTime: "13.25"),
+          TrainScheduleCard(trainNumber: "1029", departureTime: "14.25"),
+          TrainScheduleCard(trainNumber: "1031", departureTime: "15.25"),
+          TrainScheduleCard(trainNumber: "1033", departureTime: "16.25"),
+          TrainScheduleCard(trainNumber: "1035", departureTime: "17.25"),
+          TrainScheduleCard(trainNumber: "1037", departureTime: "18.25"),
+          TrainScheduleCard(trainNumber: "1039", departureTime: "19.25"),
+          TrainScheduleCard(trainNumber: "1041", departureTime: "20.25"),
+          TrainScheduleCard(trainNumber: "1043", departureTime: "21.25"),
         ],
       ),
     );

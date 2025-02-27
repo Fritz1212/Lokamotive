@@ -21,7 +21,12 @@ class Schedule2 extends StatelessWidget {
               ],
             )
           ),
-          ListTrain(),
+          ListTrain()
+          // Container(height: MediaQuery.of(context).size.height * 0.06),
+          // const Expanded(
+          //   flex: 2,
+          //   child: ListTrain()
+          // ),
         ],
       )
     );
@@ -131,7 +136,7 @@ class TimePickerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width * 0.35,
       height: MediaQuery.of(context).size.height * 0.06,
       child: ElevatedButton(
@@ -149,7 +154,7 @@ class TimePickerButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width * 0.35,
               height: MediaQuery.of(context).size.height * 0.025,
               child: Row(
@@ -167,7 +172,7 @@ class TimePickerButton extends StatelessWidget {
                 ],
               )
             ),
-            Container(
+            SizedBox(
               // Tampilkan waktu yang dipilih di sini
               height: MediaQuery.of(context).size.height * 0.035,
               child: selectedTime != null
@@ -217,24 +222,27 @@ class _SearchScheduleState extends State<SearchSchedule> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return Container(
-              height: MediaQuery.of(context).size.height * 0.4,
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.35,
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  const Divider(
-                    color: Color.fromARGB(50, 0, 0, 0),
-                    thickness: 2,
-                    indent: 150,
-                    endIndent: 150,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: 5,
+                    child: const Divider(
+                      color: Color.fromARGB(64, 0, 0, 0),
+                      thickness: 1,
+                    ),
                   ),
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
                     height: MediaQuery.of(context).size.height * 0.3,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           height: MediaQuery.of(context).size.height * 0.04,
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -252,7 +260,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                         ),
                         Column(
                           children: [
-                            Container(
+                            SizedBox(
                               width: MediaQuery.of(context).size.width * 0.8,
                               height: MediaQuery.of(context).size.height * 0.05,
                               child: Row(
@@ -314,18 +322,18 @@ class _SearchScheduleState extends State<SearchSchedule> {
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.02,
                             ),
-                            Container(
+                            SizedBox(
                               width: MediaQuery.of(context).size.width * 0.8,
                               height: MediaQuery.of(context).size.height * 0.06,  
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: MediaQuery.of(context).size.width * 0.35,
                                     child: const TimePickerScreen(labelText: "From",),
                                   ),
-                                  Container(
+                                  SizedBox(
                                     width: MediaQuery.of(context).size.width * 0.35,
                                     child: const TimePickerScreen(labelText: "Until",),
                                   )
@@ -345,7 +353,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                       return SlideTransition(
                                         position: Tween<Offset>(
-                                          begin: const Offset(1.0, 0.0), // Mulai dari kiri
+                                          begin: const Offset(1.0, 0.0), 
                                           end: Offset.zero,
                                         ).animate(animation),
                                         child: child,
@@ -417,7 +425,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 0.75,
-              height: MediaQuery.of(context).size.height * 0.06,
+              height: MediaQuery.of(context).size.height * 0.07,
               child: Row(
                 children: [
                   SizedBox(
@@ -489,9 +497,9 @@ class _SearchScheduleState extends State<SearchSchedule> {
             ),
             GestureDetector(
               onTap: () {scheduleTrain2(context);},
-              child: SizedBox(
+              child: Container(
                 width: MediaQuery.of(context).size.width * 0.75,
-                height: MediaQuery.of(context).size.height * 0.06,
+                height: MediaQuery.of(context).size.height * 0.07,
                 child: Row(
                   children: [
                     SizedBox(
@@ -502,14 +510,14 @@ class _SearchScheduleState extends State<SearchSchedule> {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.05,
                     ),
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.6,
                       height: MediaQuery.of(context).size.height * 0.1,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: MediaQuery.of(context).size.width * 0.6,
                             height: MediaQuery.of(context).size.height * 0.05,
                             child: const Column(
@@ -541,6 +549,61 @@ class _SearchScheduleState extends State<SearchSchedule> {
   }
 }
 
+class TrainContainer extends StatelessWidget {
+  final String text;
+
+  const TrainContainer({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.85,
+          height: MediaQuery.of(context).size.height * 0.055,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.06,
+                height: MediaQuery.of(context).size.height * 0.05,
+                child: Image.asset("assets/Vector.png"),
+              ),
+              const SizedBox(width: 15),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: MediaQuery.of(context).size.height * 0.05,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      text,
+                      style: const TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.85,
+          height: 5,
+          child: const Divider(
+            color: Color.fromARGB(64, 0, 0, 0),
+            thickness: 1,
+          ),
+        ),
+        const SizedBox(height: 15),
+      ],
+    );
+  }
+}
+
 class ListTrain extends StatelessWidget {
   const ListTrain({super.key});
 
@@ -551,457 +614,16 @@ class ListTrain extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.62,
       child: ListView(
         padding: const EdgeInsets.all(30.0),
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "PESING",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "PALMERAH",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "JAKARTA KOTA",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "MANGGARAI",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "BOGOR",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "DEPOK",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "PARUNG PANJANG",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "PASAR MINGGU",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "PALMERAH",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85,
-            height: MediaQuery.of(context).size.height * 0.055,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.06,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Image.asset("assets/Vector.png")
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "PALMERAH",
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-              width: 370,
-              height: 5,
-              child: Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
-              ),
-            ),
-          const SizedBox(
-            height: 15,
-          ),
+        children: const [
+          TrainContainer(text: "PESING"),
+          TrainContainer(text: "PALMERAH"),
+          TrainContainer(text: "JAKARTA KOTA"),
+          TrainContainer(text: "MANGGARAI"),
+          TrainContainer(text: "BOGOR"),
+          TrainContainer(text: "DEPOK"),
+          TrainContainer(text: "PARUNG PANJANG"),
+          TrainContainer(text: "PASAR MINGGU"),
+          TrainContainer(text: "CITAYAM"),
         ],
       )
     );

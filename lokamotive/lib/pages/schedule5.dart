@@ -74,7 +74,7 @@ class LocationTimeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: MediaQuery.of(context).size.width * 0.89,
       height: MediaQuery.of(context).size.height * 0.03,
       child: Row(
@@ -120,6 +120,9 @@ class LocationTimeWidget extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.08
+          )
         ],
       ),
     );
@@ -131,12 +134,12 @@ class TrainMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: MediaQuery.of(context).size.width * 0.9,
-      height: MediaQuery.of(context).size.height * 0.65,
+      height: MediaQuery.of(context).size.height * 0.7,
       child: Stack(
         children: [
-          Row(
+          Row(  
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -217,7 +220,7 @@ class _DottedVerticalLinePainter extends CustomPainter {
       ..strokeWidth = width
       ..strokeCap = StrokeCap.round;
 
-    double startY = 0;
+    double startY = 5;
     while (startY < size.height) {
       canvas.drawLine(
         Offset(size.width / 2, startY),
