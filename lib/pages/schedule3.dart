@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lokamotive_schedule/pages/schedule4.dart';
+import 'package:lokamotive/pages/schedule4.dart';
 import 'schedule2.dart';
 
 class Schedule3 extends StatelessWidget {
@@ -8,23 +8,21 @@ class Schedule3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Expanded(
-            child: Stack(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: [
+            Expanded(
+                child: Stack(
               clipBehavior: Clip.none,
               children: [
                 TopFunc(),
                 SearchSchedule(),
                 ReturnButton(),
               ],
-            )
-          ),
-          DestinationFunc(),
-        ],
-      )
-    );
+            )),
+            DestinationFunc(),
+          ],
+        ));
   }
 }
 
@@ -34,29 +32,30 @@ class ReturnButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.035,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.2,
-        height: MediaQuery.of(context).size.height * 0.1,
-        child: GestureDetector(
-          onTap: () { 
-            Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => const Schedule2(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                return SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(-1.0, 0.0), // Mulai dari kiri
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: child,
-                );
-              },
-            ));
-          },
-          child: Image.asset("assets/Semua Button.png"),
-        ),
-      )
-    );
+        top: MediaQuery.of(context).size.height * 0.035,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery.of(context).size.height * 0.1,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const Schedule2(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(-1.0, 0.0), // Mulai dari kiri
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                },
+              ));
+            },
+            child: Image.asset("assets/Semua Button.png"),
+          ),
+        ));
   }
 }
 
@@ -140,7 +139,8 @@ class TrainRouteCard extends StatelessWidget {
                             children: [
                               Container(
                                 padding: const EdgeInsets.all(5),
-                                height: MediaQuery.of(context).size.height * 0.043,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.043,
                                 child: Text(
                                   startStation,
                                   style: const TextStyle(
@@ -151,12 +151,14 @@ class TrainRouteCard extends StatelessWidget {
                               ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.1,
-                                height: MediaQuery.of(context).size.height * 0.043,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.043,
                                 child: Image.asset("assets/Vector(3).png"),
                               ),
                               Container(
                                 padding: const EdgeInsets.all(5),
-                                height: MediaQuery.of(context).size.height * 0.043,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.043,
                                 child: Text(
                                   endStation,
                                   style: const TextStyle(
@@ -207,7 +209,7 @@ class DestinationFunc extends StatelessWidget {
                 Text(
                   "Choose your destination",
                   style: TextStyle(
-                    fontSize: 20, 
+                    fontSize: 20,
                     color: Color(0xFF225477),
                     fontWeight: FontWeight.w800,
                   ),

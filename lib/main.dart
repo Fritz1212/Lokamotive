@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'landingPage.dart';
-import 'endPage.dart';
-import 'detailPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,15 +15,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Lokamotive',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 103, 58, 183)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 103, 58, 183)),
         useMaterial3: true,
       ),
-      initialRoute: '/first',
-      routes: {
-        '/first': (context) => LandingPage(),
-        '/second': (context) => endPage(),
-        '/third': (context) => detailPage()
-      },
+      home: LandingPage(),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lokamotive_schedule/pages/schedule3.dart';
-import 'package:lokamotive_schedule/pages/schedule5.dart';
+import 'package:lokamotive/pages/schedule3.dart';
+import 'package:lokamotive/pages/schedule5.dart';
 import 'schedule2.dart';
 
 class Schedule4 extends StatelessWidget {
@@ -9,23 +9,21 @@ class Schedule4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Expanded(
-            child: Stack(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: [
+            Expanded(
+                child: Stack(
               clipBehavior: Clip.none,
               children: [
                 TopFunc(),
                 InfoTrain(),
                 ReturnButton(),
               ],
-            )
-          ),
-          TrainSchedule(),
-        ],
-      )
-    );
+            )),
+            TrainSchedule(),
+          ],
+        ));
   }
 }
 
@@ -35,29 +33,30 @@ class ReturnButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.035,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.2,
-        height: MediaQuery.of(context).size.height * 0.1,
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => const Schedule3(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                return SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(-1.0, 0.0), // Mulai dari kiri
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: child,
-                );
-              },
-            ));
-          },
-          child: Image.asset("assets/Semua Button.png"),
-        ),
-      )
-    );
+        top: MediaQuery.of(context).size.height * 0.035,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery.of(context).size.height * 0.1,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    const Schedule3(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(-1.0, 0.0), // Mulai dari kiri
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                },
+              ));
+            },
+            child: Image.asset("assets/Semua Button.png"),
+          ),
+        ));
   }
 }
 
@@ -66,99 +65,95 @@ class InfoTrain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(  
-      child: Center(
-        child: Transform.translate(
-          offset: Offset(0, MediaQuery.of(context).size.height / 100 - 20),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.7,
-            height: MediaQuery.of(context).size.height * 0.14,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.65,
-                  height: MediaQuery.of(context).size.height * 0.03,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Bogor",
-                              style: TextStyle(
-                                fontSize: 15, 
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFFFFFFFF)
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.03,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.07,
-                        height: MediaQuery.of(context).size.height * 0.07,
-                        child: Image.asset("assets/Vector(5).png"),
-                      ), 
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.03,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Manggarai",
-                              style: TextStyle(
+    return Positioned(
+        child: Center(
+      child: Transform.translate(
+        offset: Offset(0, MediaQuery.of(context).size.height / 100 - 20),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: MediaQuery.of(context).size.height * 0.14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.65,
+                height: MediaQuery.of(context).size.height * 0.03,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(2),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Bogor",
+                            style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400,
-                                color: Color(0xFFFFFFFF)
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                                color: Color(0xFFFFFFFF)),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.03,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.07,
+                      height: MediaQuery.of(context).size.height * 0.07,
+                      child: Image.asset("assets/Vector(5).png"),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.03,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(2),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Manggarai",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFFFFFFFF)),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.057,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.54,
-                  height: MediaQuery.of(context).size.height * 0.053,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "KRL SCHEDULE",
-                        style: TextStyle(
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.057,
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.54,
+                height: MediaQuery.of(context).size.height * 0.053,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "KRL SCHEDULE",
+                      style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.w400,
-                          color: Color(0xFFFFFFFF)
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+                          color: Color(0xFFFFFFFF)),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
         ),
-      )
-    );
+      ),
+    ));
   }
 }
 
@@ -182,8 +177,10 @@ class TrainScheduleCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             onTap: () {
               Navigator.of(context).push(PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => Schedule5(),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    Schedule5(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
                   return SlideTransition(
                     position: Tween<Offset>(
                       begin: const Offset(1.0, 0.0),
@@ -235,10 +232,13 @@ class TrainScheduleCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.047,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.047,
                                 child: Image.asset("assets/Vector(4).png"),
                               ),
-                              SizedBox(width: MediaQuery.of(context).size.width * 0.012),
+                              SizedBox(
+                                  width: MediaQuery.of(context).size.width *
+                                      0.012),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.55,
                                 child: Row(
@@ -293,7 +293,7 @@ class TrainScheduleCard extends StatelessWidget {
     );
   }
 }
- 
+
 class TrainSchedule extends StatelessWidget {
   const TrainSchedule({super.key});
 
@@ -301,7 +301,7 @@ class TrainSchedule extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.7, 
+      height: MediaQuery.of(context).size.height * 0.7,
       child: ListView(
         children: const [
           TrainScheduleCard(trainNumber: "1025", departureTime: "12.25"),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lokamotive_schedule/pages/schedule3.dart';
+import 'package:lokamotive/pages/schedule3.dart';
 import 'schedule1.dart';
 
 class Schedule2 extends StatelessWidget {
@@ -8,28 +8,26 @@ class Schedule2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Expanded(
-            child: Stack(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: [
+            Expanded(
+                child: Stack(
               clipBehavior: Clip.none,
               children: [
                 TopFunc(),
                 SearchSchedule(),
                 ReturnButton(),
               ],
-            )
-          ),
-          ListTrain()
-          // Container(height: MediaQuery.of(context).size.height * 0.06),
-          // const Expanded(
-          //   flex: 2,
-          //   child: ListTrain()
-          // ),
-        ],
-      )
-    );
+            )),
+            ListTrain()
+            // Container(height: MediaQuery.of(context).size.height * 0.06),
+            // const Expanded(
+            //   flex: 2,
+            //   child: ListTrain()
+            // ),
+          ],
+        ));
   }
 }
 
@@ -39,16 +37,14 @@ class TopFunc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: const BoxDecoration(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.3,
+      decoration: const BoxDecoration(
           color: Color(0xFF225477),
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(70),
-            bottomRight: Radius.circular(70)
-          )
-        ),
-      );
+              bottomLeft: Radius.circular(70),
+              bottomRight: Radius.circular(70))),
+    );
   }
 }
 
@@ -58,29 +54,30 @@ class ReturnButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.035,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.2,
-        height: MediaQuery.of(context).size.height * 0.1,
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => Schedule1(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                return SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(-1.0, 0.0), // Mulai dari kiri
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: child,
-                );
-              },
-            ));
-          },
-          child: Image.asset("assets/Semua Button.png"),
-        ),
-      )
-    );
+        top: MediaQuery.of(context).size.height * 0.035,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery.of(context).size.height * 0.1,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    Schedule1(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(-1.0, 0.0), // Mulai dari kiri
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                },
+              ));
+            },
+            child: Image.asset("assets/Semua Button.png"),
+          ),
+        ));
   }
 }
 
@@ -100,7 +97,8 @@ class _TimePickerScreenState extends State<TimePickerScreen> {
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialTime: _selectedTime ?? TimeOfDay.now(), // Waktu awal yang ditampilkan
+      initialTime:
+          _selectedTime ?? TimeOfDay.now(), // Waktu awal yang ditampilkan
     );
 
     if (pickedTime != null && pickedTime != _selectedTime) {
@@ -155,29 +153,29 @@ class TimePickerButton extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.35,
-              height: MediaQuery.of(context).size.height * 0.025,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    labelText, // Tampilkan teks label di sini
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black,
+                width: MediaQuery.of(context).size.width * 0.35,
+                height: MediaQuery.of(context).size.height * 0.025,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      labelText, // Tampilkan teks label di sini
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                ],
-              )
-            ),
+                  ],
+                )),
             SizedBox(
               // Tampilkan waktu yang dipilih di sini
               height: MediaQuery.of(context).size.height * 0.035,
               child: selectedTime != null
                   ? Text(
-                      selectedTime!.format(context), // Format waktu yang dipilih
+                      selectedTime!
+                          .format(context), // Format waktu yang dipilih
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -217,7 +215,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
       ),
       builder: (context) {
-        int _selectedValue = 0; 
+        int _selectedValue = 0;
 
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
@@ -268,7 +266,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Transform.scale(
-                                    scale: 1.3, 
+                                    scale: 1.3,
                                     child: Radio<int>(
                                       value: 0,
                                       groupValue: _selectedValue,
@@ -276,7 +274,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                       onChanged: (int? value) {
                                         if (value != null) {
                                           setModalState(() {
-                                            _selectedValue = value; 
+                                            _selectedValue = value;
                                           });
                                         }
                                       },
@@ -284,7 +282,8 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                   ),
                                   const Text(
                                     "1 Today",
-                                    style: TextStyle(fontSize: 15, color: Colors.black),
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.black),
                                   ),
                                 ],
                               ),
@@ -298,23 +297,24 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Transform.scale(
-                                      scale: 1.3, 
-                                      child: Radio<int>(
-                                        value: 1,
-                                        groupValue: _selectedValue,
-                                        activeColor: Colors.orange,
-                                        onChanged: (int? value) {
-                                          if (value != null) {
-                                            setModalState(() {
-                                              _selectedValue = value; 
-                                            });
-                                          }
-                                        },
-                                      ),
+                                    scale: 1.3,
+                                    child: Radio<int>(
+                                      value: 1,
+                                      groupValue: _selectedValue,
+                                      activeColor: Colors.orange,
+                                      onChanged: (int? value) {
+                                        if (value != null) {
+                                          setModalState(() {
+                                            _selectedValue = value;
+                                          });
+                                        }
+                                      },
                                     ),
+                                  ),
                                   const Text(
                                     "Set Your Own Schedule",
-                                    style: TextStyle(fontSize: 15, color: Colors.black),
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.black),
                                   ),
                                 ],
                               ),
@@ -324,18 +324,25 @@ class _SearchScheduleState extends State<SearchSchedule> {
                             ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.8,
-                              height: MediaQuery.of(context).size.height * 0.06,  
+                              height: MediaQuery.of(context).size.height * 0.06,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.35,
-                                    child: const TimePickerScreen(labelText: "From",),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
+                                    child: const TimePickerScreen(
+                                      labelText: "From",
+                                    ),
                                   ),
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.35,
-                                    child: const TimePickerScreen(labelText: "Until",),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
+                                    child: const TimePickerScreen(
+                                      labelText: "Until",
+                                    ),
                                   )
                                 ],
                               ),
@@ -349,11 +356,14 @@ class _SearchScheduleState extends State<SearchSchedule> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.of(context).push(PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) => Schedule3(),
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        Schedule3(),
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
                                       return SlideTransition(
                                         position: Tween<Offset>(
-                                          begin: const Offset(1.0, 0.0), 
+                                          begin: const Offset(1.0, 0.0),
                                           end: Offset.zero,
                                         ).animate(animation),
                                         child: child,
@@ -370,9 +380,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                 child: const Text(
                                   "Apply",
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white
-                                  ),
+                                      fontSize: 16, color: Colors.white),
                                 ),
                               ),
                             ),
@@ -399,26 +407,24 @@ class _SearchScheduleState extends State<SearchSchedule> {
         width: MediaQuery.of(context).size.width * 0.9,
         height: MediaQuery.of(context).size.height * 0.22,
         decoration: BoxDecoration(
-          color: const Color(0xFFF7F7F7), 
-          border: Border.all(
-            color: const Color(0xFFA2A2A2),
-            width: 1,
-          ),
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(15),
-            bottomRight: Radius.circular(15),
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15)
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5), 
-              blurRadius: 5, 
-              spreadRadius: 0, 
-              offset: const Offset(0, 4), 
-            )
-          ]
-        ),
+            color: const Color(0xFFF7F7F7),
+            border: Border.all(
+              color: const Color(0xFFA2A2A2),
+              width: 1,
+            ),
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 5,
+                spreadRadius: 0,
+                offset: const Offset(0, 4),
+              )
+            ]),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -444,43 +450,38 @@ class _SearchScheduleState extends State<SearchSchedule> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          height: MediaQuery.of(context).size.height * 0.03,
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Station",
-                                style: TextStyle(
-                                  fontSize: 16, 
-                                  color: Color.fromARGB(89, 0, 0, 0),
-                                ),
-                              ),
-                            ]
-                          )
-                        ),
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            height: MediaQuery.of(context).size.height * 0.03,
+                            child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Station",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Color.fromARGB(89, 0, 0, 0),
+                                    ),
+                                  ),
+                                ])),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          height: MediaQuery.of(context).size.height * 0.03,
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    hintText: "Departure Station",
-                                    border: InputBorder.none,
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                  ),
-                                )
-                              ),
-                            ]
-                          )
-                        ),
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            height: MediaQuery.of(context).size.height * 0.03,
+                            child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      child: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: "Departure Station",
+                                      border: InputBorder.none,
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    ),
+                                  )),
+                                ])),
                       ],
                     ),
                   ),
@@ -491,61 +492,65 @@ class _SearchScheduleState extends State<SearchSchedule> {
               width: MediaQuery.of(context).size.width * 0.75,
               height: 30,
               child: const Divider(
-                color: Color.fromARGB(64, 0, 0, 0),  
-                thickness: 1, 
+                color: Color.fromARGB(64, 0, 0, 0),
+                thickness: 1,
               ),
             ),
             GestureDetector(
-              onTap: () {scheduleTrain2(context);},
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                height: MediaQuery.of(context).size.height * 0.07,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.1,
-                      height: 40,
-                      child: Image.asset("assets/Vector(1).png"),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.05,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            child: const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Schedule",
-                                  style: TextStyle(fontSize: 16, color: Color.fromARGB(89, 0, 0, 0)),
-                                ),
-                                Text(
-                                  "Select Train Schedule",
-                                  style: TextStyle(fontSize: 17, color: Colors.black),
-                                ),
-                              ]
-                            )
-                          ),
-                        ],
+                onTap: () {
+                  scheduleTrain2(context);
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  height: MediaQuery.of(context).size.height * 0.07,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.1,
+                        height: 40,
+                        child: Image.asset("assets/Vector(1).png"),
                       ),
-                    )
-                  ],
-                ),
-              )
-            ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.05,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05,
+                                child: const Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Schedule",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color.fromARGB(89, 0, 0, 0)),
+                                      ),
+                                      Text(
+                                        "Select Train Schedule",
+                                        style: TextStyle(
+                                            fontSize: 17, color: Colors.black),
+                                      ),
+                                    ])),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )),
           ],
         ),
       ),
-    ); 
+    );
   }
 }
 
@@ -610,22 +615,21 @@ class ListTrain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.62,
-      child: ListView(
-        padding: const EdgeInsets.all(30.0),
-        children: const [
-          TrainContainer(text: "PESING"),
-          TrainContainer(text: "PALMERAH"),
-          TrainContainer(text: "JAKARTA KOTA"),
-          TrainContainer(text: "MANGGARAI"),
-          TrainContainer(text: "BOGOR"),
-          TrainContainer(text: "DEPOK"),
-          TrainContainer(text: "PARUNG PANJANG"),
-          TrainContainer(text: "PASAR MINGGU"),
-          TrainContainer(text: "CITAYAM"),
-        ],
-      )
-    );
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.62,
+        child: ListView(
+          padding: const EdgeInsets.all(30.0),
+          children: const [
+            TrainContainer(text: "PESING"),
+            TrainContainer(text: "PALMERAH"),
+            TrainContainer(text: "JAKARTA KOTA"),
+            TrainContainer(text: "MANGGARAI"),
+            TrainContainer(text: "BOGOR"),
+            TrainContainer(text: "DEPOK"),
+            TrainContainer(text: "PARUNG PANJANG"),
+            TrainContainer(text: "PASAR MINGGU"),
+            TrainContainer(text: "CITAYAM"),
+          ],
+        ));
   }
 }

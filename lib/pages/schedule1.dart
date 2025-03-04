@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lokamotive_schedule/pages/schedule2.dart';
+import 'package:lokamotive/pages/schedule2.dart';
 
 class Schedule1 extends StatelessWidget {
   const Schedule1({super.key});
@@ -7,11 +7,11 @@ class Schedule1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Expanded(
-            child: Stack(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: [
+            Expanded(
+                child: Stack(
               clipBehavior: Clip.none,
               children: [
                 TopPic(),
@@ -19,11 +19,9 @@ class Schedule1 extends StatelessWidget {
                 TopText(),
                 BottomFunc(),
               ],
-            )
-          ),
-        ],
-      )
-    );
+            )),
+          ],
+        ));
   }
 }
 
@@ -60,29 +58,30 @@ class ReturnButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.035,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.2,
-        height: MediaQuery.of(context).size.height * 0.1,
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => Schedule1(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                return SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(-1.0, 0.0), // Mulai dari kiri
-                    end: Offset.zero,
-                  ).animate(animation),
-                  child: child,
-                );
-              },
-            ));
-          },
-          child: Image.asset("assets/Semua Button.png"),
-        ),
-      )
-    );
+        top: MediaQuery.of(context).size.height * 0.035,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery.of(context).size.height * 0.1,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    Schedule1(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(-1.0, 0.0), // Mulai dari kiri
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  );
+                },
+              ));
+            },
+            child: Image.asset("assets/Semua Button.png"),
+          ),
+        ));
   }
 }
 
@@ -143,14 +142,18 @@ class TransportCard extends StatelessWidget {
                           onPressed: onSelect,
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 1, vertical: 1),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                           child: const Text(
                             "SELECT",
-                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFF28A33)),
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFF28A33)),
                           ),
                         ),
                       )
@@ -189,27 +192,30 @@ class BottomFunc extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       child: ClipPath(
-        clipper: CustomShapeClipper(),
-        child: Stack(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.5,
-              width: double.infinity,
-              color: Colors.white,
-            ),
-            Center(
-              child: Column(
+          clipper: CustomShapeClipper(),
+          child: Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                width: double.infinity,
+                color: Colors.white,
+              ),
+              Center(
+                  child: Column(
                 children: [
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.35,
                   ),
                   TransportCard(
                     title: "KRL",
-                    imagePath: "assets/10 Bustling Facts About Buses - The Fact Site 1.png",
+                    imagePath:
+                        "assets/10 Bustling Facts About Buses - The Fact Site 1.png",
                     onSelect: () {
                       Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => Schedule2(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            Schedule2(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
                           return SlideTransition(
                             position: Tween<Offset>(
                               begin: const Offset(1.0, 0.0), // Mulai dari kiri
@@ -226,11 +232,14 @@ class BottomFunc extends StatelessWidget {
                   ),
                   TransportCard(
                     title: "LRT",
-                    imagePath: "assets/Segera Beroperasi, Ini Daftar Tarif LRT Jabodebek Setelah Disubsidi Pemerintah 1.png",
+                    imagePath:
+                        "assets/Segera Beroperasi, Ini Daftar Tarif LRT Jabodebek Setelah Disubsidi Pemerintah 1.png",
                     onSelect: () {
                       Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => Schedule2(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            Schedule2(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
                           return SlideTransition(
                             position: Tween<Offset>(
                               begin: const Offset(1.0, 0.0), // Mulai dari kiri
@@ -250,8 +259,10 @@ class BottomFunc extends StatelessWidget {
                     imagePath: "assets/download (3) 1.png",
                     onSelect: () {
                       Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => Schedule2(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            Schedule2(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
                           return SlideTransition(
                             position: Tween<Offset>(
                               begin: const Offset(1.0, 0.0), // Mulai dari kiri
@@ -271,8 +282,10 @@ class BottomFunc extends StatelessWidget {
                     imagePath: "assets/download (4) 1.png",
                     onSelect: () {
                       Navigator.of(context).push(PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => Schedule2(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            Schedule2(),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
                           return SlideTransition(
                             position: Tween<Offset>(
                               begin: const Offset(1.0, 0.0), // Mulai dari kiri
@@ -285,11 +298,9 @@ class BottomFunc extends StatelessWidget {
                     },
                   ),
                 ],
-              )
-            )
-          ],
-        )
-      ),
+              ))
+            ],
+          )),
     );
   }
 }
@@ -298,10 +309,13 @@ class CustomShapeClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height * 0.2); // Turun ke bawah dengan radius 15 (perkiraan)
-    path.quadraticBezierTo(-10, size.height * 0.3, 60, size.height * 0.3); // Radius 15 di kiri atas
+    path.lineTo(
+        0, size.height * 0.2); // Turun ke bawah dengan radius 15 (perkiraan)
+    path.quadraticBezierTo(-10, size.height * 0.3, 60,
+        size.height * 0.3); // Radius 15 di kiri atas
     path.lineTo(size.width - 60, size.height * 0.3); // Lurus ke kanan
-    path.quadraticBezierTo(size.width, size.height * 0.3, size.width, size.height * 0.355); // Radius 15 di kanan atas
+    path.quadraticBezierTo(size.width, size.height * 0.3, size.width,
+        size.height * 0.355); // Radius 15 di kanan atas
     path.lineTo(size.width, size.height); // Langsung ke kanan bawah
     path.lineTo(0, size.height); // Langsung ke kiri bawah
     path.close();
@@ -322,9 +336,9 @@ class TopText extends StatelessWidget {
     return Positioned(
       top: MediaQuery.of(context).size.height * 0.15,
       left: 0,
-      right: 0, 
+      right: 0,
       child: Align(
-        alignment: Alignment.topCenter, 
+        alignment: Alignment.topCenter,
         child: Transform.translate(
           offset: Offset(0, MediaQuery.of(context).size.height / 100 - 35),
           child: Container(
@@ -345,10 +359,9 @@ class TopText extends StatelessWidget {
                 Text(
                   "Start Your Journey!",
                   style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold
-                  ),
+                      fontSize: 30,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
                 ),
               ],
             ),
