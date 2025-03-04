@@ -9,6 +9,7 @@ android {
     namespace = "com.example.lokamotive"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    buildToolsVersion = "23.0.1"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
