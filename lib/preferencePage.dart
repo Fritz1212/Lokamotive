@@ -65,7 +65,9 @@ class _TransportationPreferenceScreenState
                     child: Container(
                       decoration: BoxDecoration(
                         border: isSelected
-                            ? Border.all(color: Colors.yellow, width: 5) // Border kuning
+                            ? Border.all(
+                                color: Color(0xFFF28A33),
+                                width: 5) // Border kuning
                             : null, // Tidak ada border jika tidak dipilih
                         borderRadius: BorderRadius.circular(10),
                       ),

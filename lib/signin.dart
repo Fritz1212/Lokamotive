@@ -1,17 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:lokamotive/registrationPage.dart';
 
-class SigninPage extends StatelessWidget {
+class SigninPage extends StatefulWidget {
+  @override
+  _SigninPageState createState() => _SigninPageState();
+}
+
+class _SigninPageState extends State<SigninPage> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  String? _emailError;
+  String? _passwordError;
+
+  void _validateAndLogin() {
+    setState(() {
+      _emailError =
+          _emailController.text.isEmpty ? "Email cannot be empty" : null;
+      _passwordError = _passwordController.text.length < 6
+          ? "Password must be at least 6 characters"
+          : null;
+    });
+
+    if (_emailError == null && _passwordError == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Login Successful!")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF225477),
-              Color(0xFFFFFFFF).withOpacity(0.6)
-            ], // Gradasi dari biru ke biru muda
+            colors: [Color(0xFF225477), Color(0xFFFFFFFF).withOpacity(0.6)],
             begin: Alignment.topCenter,
             end: Alignment.center,
           ),
@@ -19,16 +44,15 @@ class SigninPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center, // Teks rata kiri
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 30),
-                  child: RegisterImage(),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 50),
+                  logInImage(),
+                  SizedBox(height: 10),
+                  Text(
                     'Sign In',
                     style: TextStyle(
                       fontSize: 28,
@@ -36,131 +60,71 @@ class SigninPage extends StatelessWidget {
                       color: Color(0xFF102E48),
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
-                ColoredBox(
-                  color: Colors.red,
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    "Let's Get Started",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+                  SizedBox(height: 20),
+                  InputField(
+                    label: "Email",
+                    hintText: "Enter your email",
+                    obscureText: false,
+                    controller: _emailController,
+                    errorText: _emailError,
                   ),
-                ),
-                SizedBox(height: 0),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    "Create An Account",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black54,
-                    ),
+                  SizedBox(height: 16),
+                  InputField(
+                    label: "Password",
+                    hintText: "Enter your password",
+                    obscureText: true,
+                    controller: _passwordController,
+                    errorText: _passwordError,
                   ),
-                ),
-                SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
+                  SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: _validateAndLogin,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF225477),
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Center(
                       child: Text(
-                    "Email",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  )),
-                ),
-                KotakTeks(),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                      child: Text(
-                    "Password",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  )),
-                ),
-                KotakTeks(),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                      child: Text(
-                    "Forget Password?",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  )),
-                ),
-                SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF225477),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Log In",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+                        "Log In",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Already have an Account? ",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: TextStyle(fontSize: 14, color: Colors.black54),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        // Implementasi untuk navigasi ke halaman Register
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  AccountRegistration()), // Ganti SignInPage dengan halaman Sign In yang kamu buat
-                        );
-                      },
-                      child: Text(
-                        "Register",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFF28A33),
-                          decoration: TextDecoration.underline,
-                          decorationColor: Color(0xFFF28A33),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AccountRegistration()),
+                          );
+                        },
+                        child: Text(
+                          "Register",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFF28A33),
+                            decoration: TextDecoration.underline,
+                            decorationColor: Color(0xFFF28A33),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
         ),
@@ -169,39 +133,70 @@ class SigninPage extends StatelessWidget {
   }
 }
 
-// Dummy widget for illustration
-class RegisterImage extends StatelessWidget {
+// Widget untuk input field dengan error di luar kotak
+class InputField extends StatelessWidget {
+  final String label;
+  final String hintText;
+  final bool obscureText;
+  final TextEditingController controller;
+  final String? errorText;
+
+  InputField({
+    required this.label,
+    required this.hintText,
+    required this.obscureText,
+    required this.controller,
+    this.errorText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        SizedBox(height: 5),
+        TextField(
+          controller: controller,
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: TextStyle(color: Colors.grey.shade600),
+            filled: true,
+            fillColor: Color(0xFF8FBDF4).withOpacity(0.2),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              errorText!,
+              style: TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+// Widget untuk gambar di atas
+class logInImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300, // Ubah ukuran tinggi sesuai kebutuhan
-      width: 500, // Buat gambar memenuhi lebar layar
+      height: 250,
+      width: 300,
       child: Image.asset(
-        'assets/Tablet login-amico 1.png', // Ganti dengan path gambar Anda
-        fit: BoxFit.contain, // Pastikan gambar tetap proporsional
+        'assets/Tablet login-amico 1.png',
+        fit: BoxFit.contain,
       ),
     );
   }
 }
-
-class KotakTeks extends StatelessWidget {
-  const KotakTeks({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 5, bottom: 10),
-      height: 60,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Color(0x8FBDF4).withOpacity(0.2),
-      ),
-      child: TextField(
-        decoration: InputDecoration(border: InputBorder.none),
-      ),
-    );
-  }
-}
-
-// FN F5 untuk debug
-// save untuk reload (ctrl + s)
