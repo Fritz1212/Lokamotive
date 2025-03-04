@@ -2,6 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
 
+
   animated_text_kit:
     dependency: "direct main"
     description:
@@ -18,6 +19,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.0"
+
 
   async:
     dependency: transitive
@@ -36,6 +38,7 @@ packages:
     source: hosted
     version: "2.1.1"
 
+
   carousel_slider:
     dependency: "direct main"
     description:
@@ -44,6 +47,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+
 
   characters:
     dependency: transitive
@@ -70,6 +74,7 @@ packages:
     source: hosted
     version: "1.18.0"
 
+
   cross_file:
     dependency: transitive
     description:
@@ -87,6 +92,7 @@ packages:
     source: hosted
     version: "3.0.6"
 
+
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -103,6 +109,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+
   ffi:
     dependency: transitive
     description:
@@ -153,6 +160,7 @@ packages:
     source: hosted
     version: "1.1.1"
 
+
   flutter:
     dependency: "direct main"
     description: flutter
@@ -162,6 +170,7 @@ packages:
     dependency: "direct dev"
     description:
       name: flutter_lints
+
 
       sha256: "5398f14efa795ffb7a33e9b6a08798b26a180edac4ad7db3f231e40f82ce11e1"
       url: "https://pub.dev"
@@ -184,11 +193,13 @@ packages:
     source: hosted
     version: "2.0.17"
 
+
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -296,6 +307,7 @@ packages:
 
     dependency: "direct main"
 
+
     description:
       name: http
       sha256: fe7ab022b76f3034adc518fb6ea04a82387620e19977665ea18d30a1cf43442f
@@ -310,6 +322,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+
 
   image_picker:
     dependency: "direct main"
@@ -376,6 +389,7 @@ packages:
     source: hosted
     version: "0.2.1+1"
 
+
   leak_tracker:
     dependency: transitive
     description:
@@ -405,10 +419,12 @@ packages:
     description:
       name: lints
 
+
       sha256: "3315600f3fb3b135be672bf4a178c55f274bebe368325ae18462c89ac1e3b413"
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+
 
   matcher:
     dependency: transitive
@@ -435,6 +451,7 @@ packages:
     source: hosted
     version: "1.15.0"
 
+
   mime:
     dependency: transitive
     description:
@@ -444,6 +461,7 @@ packages:
     source: hosted
     version: "2.0.0"
 
+
   path:
     dependency: transitive
     description:
@@ -452,6 +470,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
+
 
   path_parsing:
     dependency: transitive
@@ -550,6 +569,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.15"
+
   sky_engine:
     dependency: transitive
     description: flutter
@@ -564,6 +584,7 @@ packages:
     source: hosted
     version: "1.10.0"
 
+
   sprintf:
     dependency: transitive
     description:
@@ -572,6 +593,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+
 
   stack_trace:
     dependency: transitive
@@ -622,6 +644,7 @@ packages:
     source: hosted
     version: "1.4.0"
 
+
   uuid:
     dependency: transitive
     description:
@@ -655,6 +678,7 @@ packages:
     source: hosted
     version: "1.1.16"
 
+
   vector_math:
     dependency: transitive
     description:
@@ -680,6 +704,7 @@ packages:
     source: hosted
     version: "1.1.0"
 
+
   xdg_directories:
     dependency: transitive
     description:
@@ -699,4 +724,5 @@ packages:
 sdks:
   dart: ">=3.5.4 <4.0.0"
   flutter: ">=3.24.0"
+
 

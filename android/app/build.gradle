@@ -10,7 +10,9 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
+
     buildToolsVersion = "23.0.1"
+
 
 
     compileOptions {
