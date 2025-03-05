@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lokamotive/dashboard_page.dart';
 import 'package:lokamotive/pages/schedule2.dart';
 
 class Schedule1 extends StatelessWidget {
@@ -66,7 +67,12 @@ class ReturnButton extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    Schedule1(),
+                    DashboardPage(
+                  userName: "Yoga",
+                  onNameChanged: (newName) {
+                    print("name updated");
+                  },
+                ),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   return SlideTransition(

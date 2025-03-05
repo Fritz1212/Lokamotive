@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:io';
+import 'pages/schedule1.dart';
 
 class DashboardPage extends StatefulWidget {
   final String userName;
@@ -28,11 +29,11 @@ class _DashboardPageState extends State<DashboardPage> {
   List<String> travelHistory = []; // Empty for demonstration
   final List<Map<String, String>> newsItems = [
     {
-      'image': 'assets/Image/news_carousel1.png',
+      'image': 'Image/news_carousel1.png',
       'title': 'New Train Schedule Update',
     },
     {
-      'image': 'assets/Image/news_carousel2.png',
+      'image': 'Image/news_carousel2.png',
       'title': 'Track Maintenance Notice',
     },
     // Add more news items
@@ -209,12 +210,13 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               _buildMenuButton(
                 'Check Schedule',
-                "assets/Icon/check_schedule_icon.svg",
-                () => print('Check Schedule'),
+                "Icon/check_schedule_icon.svg",
+                () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Schedule1())),
               ),
               _buildMenuButton(
                 'Find Route',
-                "assets/Icon/find_route_icon.svg",
+                "Icon/find_route_icon.svg",
                 () => print('Find Route'),
               ),
             ],

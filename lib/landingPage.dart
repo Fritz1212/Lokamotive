@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
+import 'registrationPage.dart';
 
 class FadeInWidget extends StatefulWidget {
   @override
@@ -70,7 +71,10 @@ class LandingPage extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15))),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/second');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AccountRegistration()));
                         },
                         child: Text("Get Started",
                             style: TextStyle(

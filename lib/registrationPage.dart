@@ -118,8 +118,13 @@ class _AccountRegistrationState extends State<AccountRegistration> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                TransportationPreferenceScreen()),
+                          builder: (context) => TransportationPreferenceScreen(
+                            userName: fullNameController.text,
+                            onNameChanged: (newName) {
+                              fullNameController.text = newName;
+                            },
+                          ),
+                        ),
                       );
                     }
                   },

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lokamotive/expandaleCard.dart';
-import 'package:lokamotive/mapPage.dart';
+import 'expandaleCard.dart';
+import 'mapPage.dart';
 
 class RoutePage extends StatelessWidget {
   @override
