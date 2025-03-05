@@ -87,6 +87,8 @@ flutter:
   assets: 
 
     - assets/
+    - assets/Icon/check_schedule_icon.svg
+    - assets/Icon/find_route_icon.svg
 
 
 

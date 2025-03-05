@@ -27,9 +27,9 @@ class BottomNavbar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildNavItem("Icon/home_icon.svg", 0, context),
-          _buildNavItem("Icon/route_icon.svg", 1, context),
-          _buildNavItem("Icon/person_icon.svg", 2, context),
+          _buildNavItem("home_icon.svg", 0, context),
+          _buildNavItem("route_icon.svg", 1, context),
+          _buildNavItem("person_icon.svg", 2, context),
         ],
       ),
     );

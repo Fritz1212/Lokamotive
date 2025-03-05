@@ -212,14 +212,15 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               _buildMenuButton(
                 'Check Schedule',
-                "Icon/check_schedule_icon.svg",
+                "Icon/schedule_icon.svg",
                 () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Schedule1())),
               ),
               _buildMenuButton(
                 'Find Route',
                 "Icon/find_route_icon.svg",
-                () => print('Find Route'),
+                () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RoutePage())),
               ),
             ],
           ),
