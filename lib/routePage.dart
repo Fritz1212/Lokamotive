@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'expandaleCard.dart';
+import 'dashboard_page.dart';
+import 'expendaleCard.dart';
 import 'mapPage.dart';
 
 class RoutePage extends StatelessWidget {
@@ -45,7 +46,7 @@ class RoutePage extends StatelessWidget {
                           topRight: Radius.zero,
                         ),
                         image: DecorationImage(
-                          image: AssetImage('assets/test.png'),
+                          image: AssetImage('test.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -60,11 +61,21 @@ class RoutePage extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: Image.asset('assets/iconspng/backRutePage.png',
+                          icon: Image.asset('iconspng/backRutePage.png',
                               width: 21, height: 19),
                           // const Icon(Icons.arrow_back, color: Colors.white, size: 30),
                           onPressed: () {
                             // Kembali ke halaman sebelumnya
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DashboardPage(
+                                    userName: "Yoga",
+                                    onNameChanged: (newName) {
+                                      print("iya nama keganti");
+                                    }),
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -127,7 +138,7 @@ class RoutePage extends StatelessWidget {
                                   prefixIcon: Padding(
                                     padding: EdgeInsets.all(0),
                                     child: Image.asset(
-                                      'assets/iconspng/locationIconRutePage.png',
+                                      'iconspng/locationIconRutePage.png',
                                       width: 27,
                                       height: 27,
                                     ),
@@ -135,7 +146,7 @@ class RoutePage extends StatelessWidget {
                                   suffixIcon: Padding(
                                     padding: EdgeInsets.all(0),
                                     child: Image.asset(
-                                      'assets/iconspng/searchIconRutePage.png',
+                                      'iconspng/searchIconRutePage.png',
                                       width: 27,
                                       height: 27,
                                     ),

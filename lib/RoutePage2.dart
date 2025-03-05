@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 import 'package:lokamotive/main.dart';
 import 'package:lokamotive/mapPage.dart';
-// import 'package:lokamotive/routePage.dart';
+import 'routePage.dart';
 
 class RutePage2 extends StatelessWidget {
   final String lokasiTujuan;
@@ -221,7 +221,7 @@ class RutePage2 extends StatelessWidget {
                     Row(
                       children: [
                         Image.asset(
-                          'assets/iconspng/krlIcon.png',
+                          'iconspng/krlIcon.png',
                           width: 20,
                           height: 24,
                         ),
@@ -231,7 +231,7 @@ class RutePage2 extends StatelessWidget {
                         Icon(Icons.arrow_forward, size: 20),
                         SizedBox(width: 5),
                         Image.asset(
-                          'assets/iconspng/${isKRLOnly ? 'krlIcon.png' : 'tjIcon.png'}',
+                          'iconspng/${isKRLOnly ? 'krlIcon.png' : 'tjIcon.png'}',
                           width: 20,
                           height: 24,
                         ),

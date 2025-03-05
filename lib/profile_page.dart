@@ -5,6 +5,7 @@ import 'dashboard_page.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter_js/flutter_js.dart';
 import 'dart:io';
+import 'RoutePage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -18,37 +19,42 @@ class _ProfilePageState extends State<ProfilePage> {
   String profileEmail = 'taesanhan@gmail.com';
   File? profileImage;
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Builder(
-          builder: (context){
-            return Directionality(textDirection: TextDirection.ltr, 
-              child: Column(
-                children: [
-                  _buildProfileHeader(context),
-                  const Spacer(),
-                ],
-              ),
-            );
-          }
-        )
-      ),
+      body: SafeArea(child: Builder(builder: (context) {
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: Column(
+            children: [
+              _buildProfileHeader(context),
+              const Spacer(),
+            ],
+          ),
+        );
+      })),
       bottomNavigationBar: BottomNavbar(
         selectedIndex: 2, // Set the current index to 2 for the profile page
         onItemTapped: (index) {
           if (index == 0) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => DashboardPage(userName: profileName, onNameChanged: (newName) {
-                setState(() {
-                  profileName = newName;
-                });
-              })),
+              MaterialPageRoute(
+                  builder: (context) => DashboardPage(
+                      userName: profileName,
+                      onNameChanged: (newName) {
+                        setState(() {
+                          profileName = newName;
+                        });
+                      })),
             );
           } else if (index == 1) {
-            print('Route Page');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      RoutePage()), // Replace with your RoutePage
+            );
           } else if (index == 2) {
             Navigator.pushReplacement(
               context,
@@ -60,10 +66,10 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-
-  Widget _buildProfileHeader(BuildContext context){
-    return Directionality(textDirection: TextDirection.ltr, 
-      child:Stack(
+  Widget _buildProfileHeader(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
         children: [
           Container(
             padding: const EdgeInsets.all(5.0),
@@ -85,13 +91,12 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-            
           Column(
             children: [
               const SizedBox(
-                // width: MediaQuery.of(contex).size.width * 0.85,
-                // 
-              ),
+                  // width: MediaQuery.of(contex).size.width * 0.85,
+                  //
+                  ),
               Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
@@ -123,19 +128,19 @@ class _ProfilePageState extends State<ProfilePage> {
                               fontSize: 14,
                             ),
                           ),
-
-                          const SizedBox(height: 10), 
+                          const SizedBox(height: 10),
                           const Divider(
-                            color: Color(0xffFFFFFF), 
-                            thickness: 1.5, 
+                            color: Color(0xffFFFFFF),
+                            thickness: 1.5,
                             height: 1,
                           ),
-                          const SizedBox(height: 10),       
-                            
+                          const SizedBox(height: 10),
                           _buildProfileOption('Edit Profile', () async {
-                            final updatedData = await
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => const EditProfilePage()),
+                            final updatedData =
+                                await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EditProfilePage()),
                             );
                             if (updatedData != null) {
                               setState(() {
@@ -151,8 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 }
                               });
                             }
-                          }
-                          ),
+                          }),
                           _buildProfileOption(
                             'Edit Transportation Preference',
                             () => print('Edit Transportation tapped'),
@@ -173,7 +177,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: CircleAvatar(
                       radius: 50,
                       backgroundColor: const Color(0xff365D93),
-                      backgroundImage: profileImage != null ? FileImage(profileImage!) : null,
+                      backgroundImage: profileImage != null
+                          ? FileImage(profileImage!)
+                          : null,
                       // backgroundImage: AssetImage('assets/profile_image.jpg'),
                     ),
                   ),
@@ -188,18 +194,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildProfileOption(String title, VoidCallback onTap) {
     return Material(
-      color: const Color.fromARGB(0, 255, 255, 255), // Pastikan transparan agar efek ripple terlihat
+      color: const Color.fromARGB(
+          0, 255, 255, 255), // Pastikan transparan agar efek ripple terlihat
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8), // Untuk animasi ripple lebih rapi
+        borderRadius:
+            BorderRadius.circular(8), // Untuk animasi ripple lebih rapi
         child: Container(
+          height: 100,
           padding: const EdgeInsets.symmetric(
             vertical: 12,
             horizontal: 16,
           ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8), 
-            color: const Color.fromARGB(0, 255, 255, 255), // Untuk tampilan lebih jelas
+            borderRadius: BorderRadius.circular(8),
+            color: const Color.fromARGB(
+                0, 255, 255, 255), // Untuk tampilan lebih jelas
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -249,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
   //     colorFilter: ColorFilter.mode(
   //       isSelected ? Color(0xFFF28A33) : Color(0xffFFFFFF),
   //       BlendMode.srcIn,
-  //     ), 
+  //     ),
   //     width: 30,
   //     height: 32,
   //   );

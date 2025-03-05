@@ -7,6 +7,7 @@ import 'package:lokamotive/profile_page.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lokamotive/routePage.dart';
 import 'dart:io';
 import 'pages/schedule1.dart';
 
@@ -118,11 +119,12 @@ class _DashboardPageState extends State<DashboardPage> {
                         onNameChanged: widget.onNameChanged)),
               );
             } else if (index == 1) {
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => RoutePage()), // Replace with your RoutePage
-              // );
-              print('Route Page');
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        RoutePage()), // Replace with your RoutePage
+              );
             } else if (index == 2) {
               Navigator.pushReplacement(
                 context,
