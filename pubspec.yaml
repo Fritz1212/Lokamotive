@@ -89,6 +89,18 @@ flutter:
     - assets/
     - assets/Icon/check_schedule_icon.svg
     - assets/Icon/find_route_icon.svg
+    - assets/Image/news_carousel1.png
+    - assets/Image/news_carousel2.png
+    - assets/Icon/home_icon.svg
+    - assets/Icon/route_icon.svg
+    - assets/Icon/person_icon.svg
+    - assets/iconspng/backRutePage.png
+    - assets/iconspng/locationIconRutePage.png
+    - assets/iconspng/searchIconRutePage.png
+    - assets/test.png
+    - assets/iconspng/krlIcon.png
+    - assets/iconspng/tjIcon.png
+
 
 
 

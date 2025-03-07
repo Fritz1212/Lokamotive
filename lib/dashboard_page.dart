@@ -30,11 +30,11 @@ class _DashboardPageState extends State<DashboardPage> {
   List<String> travelHistory = []; // Empty for demonstration
   final List<Map<String, String>> newsItems = [
     {
-      'image': 'Image/news_carousel1.png',
+      'image': 'assets/Image/news_carousel1.png',
       'title': 'New Train Schedule Update',
     },
     {
-      'image': 'Image/news_carousel2.png',
+      'image': 'assets/Image/news_carousel2.png',
       'title': 'Track Maintenance Notice',
     },
     // Add more news items
@@ -212,13 +212,13 @@ class _DashboardPageState extends State<DashboardPage> {
             children: [
               _buildMenuButton(
                 'Check Schedule',
-                "Icon/schedule_icon.svg",
+                "assets/Icon/check_schedule_icon.svg",
                 () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Schedule1())),
               ),
               _buildMenuButton(
                 'Find Route',
-                "Icon/find_route_icon.svg",
+                "assets/Icon/find_route_icon.svg",
                 () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => RoutePage())),
               ),

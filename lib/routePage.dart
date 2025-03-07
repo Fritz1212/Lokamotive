@@ -46,7 +46,7 @@ class RoutePage extends StatelessWidget {
                           topRight: Radius.zero,
                         ),
                         image: DecorationImage(
-                          image: AssetImage('test.png'),
+                          image: AssetImage('assets/test.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -61,7 +61,7 @@ class RoutePage extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
-                          icon: Image.asset('iconspng/backRutePage.png',
+                          icon: Image.asset('assets/iconspng/backRutePage.png',
                               width: 21, height: 19),
                           // const Icon(Icons.arrow_back, color: Colors.white, size: 30),
                           onPressed: () {
@@ -138,7 +138,7 @@ class RoutePage extends StatelessWidget {
                                   prefixIcon: Padding(
                                     padding: EdgeInsets.all(0),
                                     child: Image.asset(
-                                      'iconspng/locationIconRutePage.png',
+                                      'assets/iconspng/locationIconRutePage.png',
                                       width: 27,
                                       height: 27,
                                     ),
@@ -146,7 +146,7 @@ class RoutePage extends StatelessWidget {
                                   suffixIcon: Padding(
                                     padding: EdgeInsets.all(0),
                                     child: Image.asset(
-                                      'iconspng/searchIconRutePage.png',
+                                      'assets/iconspng/searchIconRutePage.png',
                                       width: 27,
                                       height: 27,
                                     ),

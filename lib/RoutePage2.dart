@@ -221,7 +221,7 @@ class RutePage2 extends StatelessWidget {
                     Row(
                       children: [
                         Image.asset(
-                          'iconspng/krlIcon.png',
+                          'assets/iconspng/krlIcon.png',
                           width: 20,
                           height: 24,
                         ),
@@ -231,7 +231,7 @@ class RutePage2 extends StatelessWidget {
                         Icon(Icons.arrow_forward, size: 20),
                         SizedBox(width: 5),
                         Image.asset(
-                          'iconspng/${isKRLOnly ? 'krlIcon.png' : 'tjIcon.png'}',
+                          'assets/iconspng/${isKRLOnly ? 'krlIcon.png' : 'tjIcon.png'}',
                           width: 20,
                           height: 24,
                         ),
