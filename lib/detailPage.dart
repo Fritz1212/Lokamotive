@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'google_map.dart';
 
 class detailPage extends StatelessWidget {
   const detailPage({super.key});
@@ -36,6 +38,7 @@ class detailPage extends StatelessWidget {
       body: SizedBox.expand(
           child: Stack(
         children: [
+          Container(child: GoogleMapWidget()),
           Container(
             margin: EdgeInsets.only(top: 50),
             child: Row(
@@ -64,15 +67,15 @@ class detailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset("Assets/Group 63.png",
+                            Image.asset("assets/Image/Group 63.png",
                                 width: 50, height: 30),
-                            Image.asset("Assets/Ellipse 40.png",
+                            Image.asset("assets/Image/Ellipse 40.png",
                                 width: 5, height: 5),
-                            Image.asset("Assets/Ellipse 40.png",
+                            Image.asset("assets/Image/Ellipse 40.png",
                                 width: 5, height: 5),
-                            Image.asset("Assets/Ellipse 40.png",
+                            Image.asset("assets/Image/Ellipse 40.png",
                                 width: 5, height: 5),
-                            Image.asset("Assets/mdi_location.png",
+                            Image.asset("assets/Image/mdi_location.png",
                                 width: 50, height: 30),
                           ],
                         ),

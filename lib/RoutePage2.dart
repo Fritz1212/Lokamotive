@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lokamotive/detailPage.dart';
 // import 'package:http/http.dart' as http;
 import 'package:lokamotive/main.dart';
 import 'package:lokamotive/mapPage.dart';
 import 'routePage.dart';
+import 'detailPage.dart';
 
 class RutePage2 extends StatelessWidget {
   final String lokasiTujuan;
@@ -86,8 +88,16 @@ class RutePage2 extends StatelessWidget {
                 children: [
                   _buildCategoryHeader("All Routes"),
                   SizedBox(height: 8 / 917 * screenHeight),
-                  _buildRouteItem(
-                      "150", "Bogor", "Karet", "30", "10000", false, false),
+                  ElevatedButton(
+                    child: _buildRouteItem(
+                        "150", "Bogor", "Karet", "30", "10000", false, false),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => detailPage()));
+                    },
+                  ),
                   _buildRouteItem("200", "Bogor", "Tanah Abang 2", "30",
                       "12000", false, false),
                   _buildRouteItem(
