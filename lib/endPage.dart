@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:lokamotive/dashboard_page.dart';
 import 'package:rive/rive.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class endPage extends StatelessWidget {
+class endPage extends StatefulWidget {
   const endPage({super.key});
+
+  @override
+  State<endPage> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<endPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 7), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DashboardPage(
+                  userName: '',
+                  onNameChanged: (String value) {},
+                )), // Replace with your next page
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +39,7 @@ class endPage extends StatelessWidget {
               width: 450,
               height: 450,
               child: RiveAnimation.asset(
-                'assets/animasi_end.riv',
+                'assets/Animation/animasi_end.riv',
                 fit: BoxFit.cover,
               ),
             ),
@@ -29,13 +50,6 @@ class endPage extends StatelessWidget {
                 fontSize: 22,
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/third');
-              },
-              child: Text("Detail",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            )
           ],
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:lokamotive/RoutePage2.dart';
+import 'endPage.dart';
 import 'google_map.dart';
 
 class detailPage extends StatelessWidget {
@@ -146,7 +148,14 @@ class detailPage extends StatelessWidget {
                 color: Colors.white,
               ),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RutePage2(
+                              lokasiTujuan: "Rumah Talenta BCA",
+                              namaLokasi: "Indonesia Arena")));
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   shape: CircleBorder(),
@@ -260,7 +269,10 @@ class detailPage extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => endPage()));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 34, 84, 119),
                     shape: RoundedRectangleBorder(

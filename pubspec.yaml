@@ -71,6 +71,7 @@ flutter:
 
     - assets/
     - assets/Image/
+    - assets/Animation/
     - assets/Icon/check_schedule_icon.svg
     - assets/Icon/find_route_icon.svg
     - assets/Image/news_carousel1.png

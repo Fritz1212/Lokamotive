@@ -26,7 +26,8 @@ class _FadeIn extends State<FadeInWidget> with SingleTickerProviderStateMixin {
     return ScaleTransition(
       scale: Tween<double>(begin: 0.8, end: 1.6)
           .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut)),
-      child: RiveAnimation.asset("assets/untitled.riv", fit: BoxFit.contain),
+      child: RiveAnimation.asset("assets/Animation/lokamotive_logo.riv",
+          fit: BoxFit.contain),
     );
   }
 
