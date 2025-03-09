@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lokamotive/preferencePage.dart';
 import 'package:lokamotive/signin.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class AccountRegistration extends StatefulWidget {
   @override
@@ -8,6 +10,27 @@ class AccountRegistration extends StatefulWidget {
 }
 
 class _AccountRegistrationState extends State<AccountRegistration> {
+  late WebSocketChannel channel;
+
+  @override
+  void initState() {
+    super.initState();
+    channel = IOWebSocketChannel.connect('ws://192.168.100.11:3000');
+  }
+
+  void sendAccount(String message) {
+    channel.sink.add(message);
+  }
+
+  void closeWebSocket() {
+    channel.sink.close();
+  }
+
+  void dispose() {
+    closeWebSocket();
+    super.dispose();
+  }
+
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -115,6 +138,8 @@ class _AccountRegistrationState extends State<AccountRegistration> {
                   onPressed: () {
                     validateInputs();
                     if (isFormValid) {
+                      sendAccount(
+                          '{"user_name" : ${fullNameController.text}, "email" : ${emailController.text}, "passwordz" : ${passwordController.text}');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
