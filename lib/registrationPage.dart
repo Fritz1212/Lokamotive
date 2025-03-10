@@ -15,7 +15,7 @@ class _AccountRegistrationState extends State<AccountRegistration> {
   @override
   void initState() {
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://192.168.100.11:3000');
+    channel = IOWebSocketChannel.connect('ws://192.168.200.24:3000');
   }
 
   void sendAccount(String message) {
@@ -139,7 +139,7 @@ class _AccountRegistrationState extends State<AccountRegistration> {
                     validateInputs();
                     if (isFormValid) {
                       sendAccount(
-                          '{"user_name" : ${fullNameController.text}, "email" : ${emailController.text}, "passwordz" : ${passwordController.text}');
+                          '{"action" : "Regis", "user_name" : "${fullNameController.text}", "email" : "${emailController.text}", "passwordz" : "${passwordController.text}"}');
                       Navigator.push(
                         context,
                         MaterialPageRoute(

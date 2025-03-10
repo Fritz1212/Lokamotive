@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
-import 'registrationPage.dart';
+import 'signin.dart';
 
 class FadeInWidget extends StatefulWidget {
   @override
@@ -75,7 +75,7 @@ class LandingPage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AccountRegistration()));
+                                  builder: (context) => SigninPage()));
                         },
                         child: Text("Get Started",
                             style: TextStyle(

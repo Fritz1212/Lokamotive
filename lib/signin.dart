@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lokamotive/registrationPage.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class SigninPage extends StatefulWidget {
   @override
@@ -10,6 +12,27 @@ class _SigninPageState extends State<SigninPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  late WebSocketChannel channel;
+
+  @override
+  void initState() {
+    super.initState();
+    channel = IOWebSocketChannel.connect('ws://192.168.200.24:3000');
+  }
+
+  void sendAccount(String message) {
+    channel.sink.add(message);
+  }
+
+  void closeWebSocket() {
+    channel.sink.close();
+  }
+
+  void dispose() {
+    closeWebSocket();
+    super.dispose();
+  }
 
   String? _emailError;
   String? _passwordError;
