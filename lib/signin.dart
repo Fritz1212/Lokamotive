@@ -22,7 +22,7 @@ class _SigninPageState extends State<SigninPage> {
   @override
   void initState() {
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://10.68.110.167:3000');
+    channel = IOWebSocketChannel.connect('ws://192.168.115.24:3000');
   }
 
   void sendAccount(String message) {
@@ -107,9 +107,9 @@ class _SigninPageState extends State<SigninPage> {
                   ElevatedButton(
                     onPressed: () {
                       _validateAndLogin();
-                      sendAccount('{"action" : "Login", "email" : "${_emailController.text}", "passwordz" : "${_passwordController.text}"}');
+                      sendAccount(
+                          '{"action" : "Login", "email" : "${_emailController.text}", "passwordz" : "${_passwordController.text}"}');
                     },
-                    
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF225477),
                       padding: EdgeInsets.symmetric(vertical: 16),
@@ -132,7 +132,8 @@ class _SigninPageState extends State<SigninPage> {
 
                         // Pastikan data yang diterima valid
                         if (response.isNotEmpty) {
-                          final Map<String, dynamic> data = jsonDecode(response);
+                          final Map<String, dynamic> data =
+                              jsonDecode(response);
 
                           if (data["status"] == "success") {
                             // Tunda navigasi hingga frame berikutnya
@@ -143,7 +144,8 @@ class _SigninPageState extends State<SigninPage> {
                                   MaterialPageRoute(
                                     builder: (context) => DashboardPage(
                                       userName: data["name"],
-                                      email: _emailController.text, // Kirim email ke dashboard
+                                      email: _emailController
+                                          .text, // Kirim email ke dashboard
                                       onNameChanged: (String value) {},
                                     ),
                                   ),
