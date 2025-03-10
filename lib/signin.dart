@@ -15,6 +15,7 @@ class _SigninPageState extends State<SigninPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String? userEmail;
 
   late WebSocketChannel channel;
 
@@ -108,6 +109,7 @@ class _SigninPageState extends State<SigninPage> {
                       _validateAndLogin();
                       sendAccount('{"action" : "Login", "email" : "${_emailController.text}", "passwordz" : "${_passwordController.text}"}');
                     },
+                    
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF225477),
                       padding: EdgeInsets.symmetric(vertical: 16),
@@ -127,24 +129,33 @@ class _SigninPageState extends State<SigninPage> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         final response = snapshot.data.toString();
-                        final Map<String, dynamic> data = response.isNotEmpty
-                            ? Map<String, dynamic>.from(jsonDecode(response))
-                            : {};
 
-                        if (data["status"] == "success") {
-                          Future.delayed(Duration.zero, () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DashboardPage(userName: data["name"], onNameChanged: (String value) {  },),
-                              ),
+                        // Pastikan data yang diterima valid
+                        if (response.isNotEmpty) {
+                          final Map<String, dynamic> data = jsonDecode(response);
+
+                          if (data["status"] == "success") {
+                            // Tunda navigasi hingga frame berikutnya
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (mounted) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DashboardPage(
+                                      userName: data["name"],
+                                      email: _emailController.text, // Kirim email ke dashboard
+                                      onNameChanged: (String value) {},
+                                    ),
+                                  ),
+                                );
+                              }
+                            });
+                          } else {
+                            return Text(
+                              data["message"] ?? "Login failed",
+                              style: TextStyle(color: Colors.red),
                             );
-                          });
-                        } else {
-                          return Text(
-                            data["message"] ?? "Login failed",
-                            style: TextStyle(color: Colors.red),
-                          );
+                          }
                         }
                       }
                       return SizedBox.shrink();

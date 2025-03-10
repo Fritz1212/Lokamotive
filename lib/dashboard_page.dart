@@ -14,14 +14,22 @@ import 'pages/schedule1.dart';
 class DashboardPage extends StatefulWidget {
   final String userName;
   final ValueChanged<String> onNameChanged;
+  final String email;
+
   const DashboardPage({
     Key? key,
     required this.userName,
     required this.onNameChanged,
+    required this.email,
   }) : super(key: key);
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class GlobalData {
+  static String userName = '';
+  static String email = '';
 }
 
 class _DashboardPageState extends State<DashboardPage> {
@@ -44,6 +52,8 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     _getCurrentLocation();
+    GlobalData.userName = widget.userName;
+    GlobalData.email = widget.email;
   }
 
   Future<void> _getCurrentLocation() async {
@@ -115,6 +125,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => DashboardPage(
+                        email: widget.email,
                         userName: widget.userName,
                         onNameChanged: widget.onNameChanged)),
               );
@@ -214,7 +225,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 'Check Schedule',
                 "assets/Icon/check_schedule_icon.svg",
                 () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Schedule1())),
+                    MaterialPageRoute(builder: (context) =>Schedule1())),
               ),
               _buildMenuButton(
                 'Find Route',

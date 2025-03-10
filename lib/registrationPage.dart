@@ -144,6 +144,7 @@ class _AccountRegistrationState extends State<AccountRegistration> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => TransportationPreferenceScreen(
+                            email: emailController.text,
                             userName: fullNameController.text,
                             onNameChanged: (newName) {
                               fullNameController.text = newName;

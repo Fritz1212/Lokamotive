@@ -15,8 +15,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String profileName = 'Han Tae San';
-  String profileEmail = 'taesanhan@gmail.com';
+  String profileName = GlobalData.userName;
+  String profileEmail = GlobalData.email;
   File? profileImage;
 
   @override
@@ -41,7 +41,8 @@ class _ProfilePageState extends State<ProfilePage> {
               context,
               MaterialPageRoute(
                   builder: (context) => DashboardPage(
-                      userName: profileName,
+                      email: GlobalData.email,
+                      userName: GlobalData.userName,
                       onNameChanged: (newName) {
                         setState(() {
                           profileName = newName;

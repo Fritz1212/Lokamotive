@@ -70,7 +70,8 @@ class RoutePage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DashboardPage(
-                                    userName: "Yoga",
+                                    email: GlobalData.email,
+                                    userName: GlobalData.userName,
                                     onNameChanged: (newName) {
                                       print("iya nama keganti");
                                     }),

@@ -19,7 +19,8 @@ class _MyWidgetState extends State<endPage> {
         context,
         MaterialPageRoute(
             builder: (context) => DashboardPage(
-                  userName: '',
+                  userName: GlobalData.userName,
+                  email: GlobalData.email,
                   onNameChanged: (String value) {},
                 )), // Replace with your next page
       );

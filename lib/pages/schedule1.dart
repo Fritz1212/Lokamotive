@@ -67,12 +67,13 @@ class ReturnButton extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    DashboardPage(
-                  userName: "Yoga",
-                  onNameChanged: (newName) {
-                    print("name updated");
-                  },
-                ),
+                  DashboardPage(
+                    email: GlobalData.email,
+                    userName: GlobalData.userName,
+                    onNameChanged: (newName) {
+                      print("name updated");
+                    },
+                  ),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   return SlideTransition(

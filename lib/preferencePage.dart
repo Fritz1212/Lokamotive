@@ -131,9 +131,10 @@ import 'registrationPage.dart';
 class TransportationPreferenceScreen extends StatefulWidget {
   final String userName; // Parameter userName
   final ValueChanged<String> onNameChanged;
+  final String email;
 
   TransportationPreferenceScreen(
-      {required this.userName, required this.onNameChanged});
+      {required this.userName, required this.onNameChanged, required this.email});
 
   @override
   _TransportationPreferenceScreenState createState() =>
@@ -233,9 +234,10 @@ class _TransportationPreferenceScreenState
                     context,
                     MaterialPageRoute(
                       builder: (context) => DashboardPage(
-                        userName:
-                            widget.userName, // Menggunakan parameter userName
+                        email: widget.email,
+                        userName:widget.userName, // Menggunakan parameter userName
                         onNameChanged: widget.onNameChanged,
+
                       ),
                     ),
                   );
