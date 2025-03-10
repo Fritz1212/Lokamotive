@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:lokamotive/dashboard_page.dart';
 import 'package:lokamotive/registrationPage.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -18,7 +21,7 @@ class _SigninPageState extends State<SigninPage> {
   @override
   void initState() {
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://192.168.200.24:3000');
+    channel = IOWebSocketChannel.connect('ws://10.68.110.167:3000');
   }
 
   void sendAccount(String message) {
@@ -46,11 +49,11 @@ class _SigninPageState extends State<SigninPage> {
           : null;
     });
 
-    if (_emailError == null && _passwordError == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login Successful!")),
-      );
-    }
+    // if (_emailError == null && _passwordError == null) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text("Login Successful!")),
+    //   );
+    // }
   }
 
   @override
@@ -101,7 +104,10 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                   SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: _validateAndLogin,
+                    onPressed: () {
+                      _validateAndLogin();
+                      sendAccount('{"action" : "Login", "email" : "${_emailController.text}", "passwordz" : "${_passwordController.text}"}');
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF225477),
                       padding: EdgeInsets.symmetric(vertical: 16),
@@ -115,6 +121,34 @@ class _SigninPageState extends State<SigninPage> {
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
+                  ),
+                  StreamBuilder(
+                    stream: channel.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final response = snapshot.data.toString();
+                        final Map<String, dynamic> data = response.isNotEmpty
+                            ? Map<String, dynamic>.from(jsonDecode(response))
+                            : {};
+
+                        if (data["status"] == "success") {
+                          Future.delayed(Duration.zero, () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DashboardPage(userName: data["name"], onNameChanged: (String value) {  },),
+                              ),
+                            );
+                          });
+                        } else {
+                          return Text(
+                            data["message"] ?? "Login failed",
+                            style: TextStyle(color: Colors.red),
+                          );
+                        }
+                      }
+                      return SizedBox.shrink();
+                    },
                   ),
                   SizedBox(height: 16),
                   Row(
@@ -223,3 +257,6 @@ class logInImage extends StatelessWidget {
     );
   }
 }
+
+//disini
+
