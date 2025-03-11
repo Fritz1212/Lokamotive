@@ -63,17 +63,18 @@ class _DashboardPageState extends State<DashboardPage> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          setState(() {
-            currentLocation = "Location permissions denied";
-          });
+          if (mounted) {
+            setState(() {
+              currentLocation = "Location permissions denied";
+            });
+          }
           return;
         }
       }
 
       // Get current position
       Position position = await Geolocator.getCurrentPosition(
-        locationSettings:
-            const LocationSettings(accuracy: LocationAccuracy.best),
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.best),
       );
 
       // Get place name from coordinates
@@ -83,19 +84,24 @@ class _DashboardPageState extends State<DashboardPage> {
       );
 
       if (placemarks.isNotEmpty) {
-        setState(() {
-          currentLocation =
-              placemarks[0].subAdministrativeArea ?? "Unknown location";
-        });
+        if (mounted) {
+          setState(() {
+            currentLocation = placemarks[0].subAdministrativeArea ?? "Unknown location";
+          });
+        }
       } else {
-        setState(() {
-          currentLocation = "Unknown location";
-        });
+        if (mounted) {
+          setState(() {
+            currentLocation = "Unknown location";
+          });
+        }
       }
     } catch (e) {
-      setState(() {
-        currentLocation = "Failed to get location";
-      });
+      if (mounted) {
+        setState(() {
+          currentLocation = "Failed to get location";
+        });
+      }
     }
   }
 

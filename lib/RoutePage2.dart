@@ -95,7 +95,7 @@ class RutePage2 extends StatelessWidget {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DetailPage()));
+                              builder: (context) => detailPage()));
                     },
                   ),
                   _buildRouteItem("200", "Bogor", "Tanah Abang 2", "30",
