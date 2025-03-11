@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lokamotive/detailPage.dart';
+import 'package:lokamotive/google_map.dart';
 // import 'package:http/http.dart' as http;
 import 'package:lokamotive/main.dart';
 import 'package:lokamotive/mapPage.dart';
@@ -11,11 +12,14 @@ class RutePage2 extends StatelessWidget {
   final String lokasiTujuan;
   final String namaLokasi;
 
-  const RutePage2({
+  RutePage2({
     Key? key,
     required this.lokasiTujuan,
     required this.namaLokasi,
   }) : super(key: key);
+
+  TextEditingController _asal = TextEditingController();
+  TextEditingController _tujuan = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +71,8 @@ class RutePage2 extends StatelessWidget {
                           height: 133 / 917 * screenHeight,
                           width: 341 / 412 * screenWidth,
                           color: Colors.white,
-                          child: Center(child: Text("Map Placeholder")),
+                          child: Center(
+                              child: GoogleMapWidget(onPage: "RoutePage2")),
                         ),
                       ),
                     ),
@@ -95,7 +100,14 @@ class RutePage2 extends StatelessWidget {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
+<<<<<<< Updated upstream
                               builder: (context) => detailPage()));
+=======
+                              builder: (context) => DetailPage(
+                                    asal: _asal.text,
+                                    tujuan: _tujuan.text,
+                                  )));
+>>>>>>> Stashed changes
                     },
                   ),
                   _buildRouteItem("200", "Bogor", "Tanah Abang 2", "30",
@@ -127,6 +139,7 @@ class RutePage2 extends StatelessWidget {
           icon: Icons.location_on,
           iconColor: Colors.white,
           hintText: namaLokasi,
+          controller: _asal,
         ),
         SizedBox(height: 1), // Spacer kecil
         Padding(
@@ -143,16 +156,19 @@ class RutePage2 extends StatelessWidget {
           icon: Icons.location_on,
           iconColor: Color(0xFFFBBD8A),
           hintText: lokasiTujuan,
+          controller: _tujuan,
         ),
       ],
     );
   }
 
   /// Field Input Lokasi
-  Widget _buildLocationField(
-      {required IconData icon,
-      required Color iconColor,
-      required String hintText}) {
+  Widget _buildLocationField({
+    required IconData icon,
+    required Color iconColor,
+    required String hintText,
+    required TextEditingController controller,
+  }) {
     return Center(
       // Pastikan Row tidak melebar ke samping
       child: Row(
@@ -164,6 +180,7 @@ class RutePage2 extends StatelessWidget {
             width: 281.14,
             height: 32.48,
             child: TextField(
+              controller: controller,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,

@@ -3,8 +3,60 @@ import 'package:flutter/material.dart';
 import 'dashboard_page.dart';
 import 'expendaleCard.dart';
 import 'mapPage.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'dart:convert';
 
-class RoutePage extends StatelessWidget {
+class RoutePage extends StatefulWidget {
+  RoutePage({super.key});
+
+  @override
+  State<RoutePage> createState() => RoutePageState();
+}
+
+class RoutePageState extends State<RoutePage> {
+  final TextEditingController _controller = TextEditingController();
+  final _channel =
+      WebSocketChannel.connect(Uri.parse('ws://192.168.115.24:3000'));
+  List<dynamic> suggestions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _channel.stream.listen((message) {
+      final Map<String, dynamic> data = jsonDecode(message);
+      print("${message}");
+
+      if (data["status"] == "success") {
+        List results = data["results"];
+        print("Parsed results: $results"); // Debugging
+
+        // Update suggestions and trigger a UI rebuild
+        setState(() {
+          suggestions.addAll(results);
+        });
+      } else {
+        print("Error: ${data["message"]}");
+      }
+    });
+  }
+
+  void search(String query) {
+    setState(() {
+      suggestions.clear();
+      final message =
+          jsonEncode({"action": "search", "query": _controller.text});
+      print("Sending WebSocket message: $message"); // Debugging
+      _channel.sink.add(message);
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _channel.sink.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -12,12 +64,6 @@ class RoutePage extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: Colors.white,
-        // appBar: AppBar(
-        //   backgroundColor: Colors.white,
-        //   leading: Icon(CupertinoIcons.home),
-        //   title: Text("LokaMotive"),
-        // ),
-
         body: Container(
           height: double.infinity,
           child: Column(
@@ -27,14 +73,6 @@ class RoutePage extends StatelessWidget {
                 child: Stack(
                   clipBehavior: Clip.none, // mencegah widget biar ga kepotong
                   children: [
-                    // Center(
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //       Navigator.pushNamed(context, '/second');
-                    //     },
-                    //     child: Text("Go to Second Page"),
-                    //   ),
-                    // ),
                     Container(
                       width: 413 / 412 * screenWidth,
                       height: 364 / 917 * screenHeight,
@@ -51,7 +89,6 @@ class RoutePage extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     Positioned(
                       top: 39 / 917 * screenHeight,
                       left: 27 / 412 * screenWidth,
@@ -81,7 +118,6 @@ class RoutePage extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     Positioned(
                       top: 206.4 / 917 * screenHeight,
                       left: 30 / 412 * screenWidth,
@@ -120,14 +156,13 @@ class RoutePage extends StatelessWidget {
                                 ),
                               ),
                             ),
-
-                            // const SizedBox(height: 16),
                             Container(
                               margin:
                                   EdgeInsets.only(top: 16 / 917 * screenHeight),
                               width: 287 / 412 * screenWidth,
                               height: 38 / 917 * screenHeight,
                               child: TextField(
+                                controller: _controller,
                                 style: TextStyle(color: Colors.black),
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
@@ -144,13 +179,11 @@ class RoutePage extends StatelessWidget {
                                       height: 27,
                                     ),
                                   ),
-                                  suffixIcon: Padding(
-                                    padding: EdgeInsets.all(0),
-                                    child: Image.asset(
-                                      'assets/iconspng/searchIconRutePage.png',
-                                      width: 27,
-                                      height: 27,
-                                    ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.search),
+                                    onPressed: () {
+                                      search(_controller.text);
+                                    },
                                   ),
                                   filled: true,
                                   fillColor: Colors.white,
@@ -159,6 +192,9 @@ class RoutePage extends StatelessWidget {
                                     borderSide: BorderSide.none,
                                   ),
                                 ),
+                                onSubmitted: (value) {
+                                  search(value);
+                                },
                               ),
                             ),
                           ],
@@ -182,28 +218,32 @@ class RoutePage extends StatelessWidget {
                 margin: EdgeInsets.only(top: 70 / 917 * screenHeight),
                 padding: EdgeInsets.only(top: 20 / 917 * screenHeight),
                 child: SingleChildScrollView(
-                    child: Column(children: [
-                  ExpandableCardUwi(
-                    nama: "Rumah Pak BUDI",
-                    alamat: "Jl Pakuan No.3",
-                    pintuMasuk1: "Gerbang Masuk",
-                    pintuMasuk2: "Lobby Utama",
-                  ),
-                  SizedBox(height: 10 / 917 * screenHeight),
-                  ExpandableCardUwi(
-                      nama: "Rumah Pak Yoga", alamat: "Jl Sawi No.3"),
-                  SizedBox(height: 10 / 917 * screenHeight),
-                  ExpandableCardUwi(
-                      nama: "Rumah Pak Tofer", alamat: "Jl Paku No.3"),
-                  SizedBox(height: 10 / 917 * screenHeight),
-                  ExpandableCardUwi(
-                      nama: "Rumah Pak Iyan", alamat: "Jl Palu No.3"),
-                  SizedBox(height: 10 / 917 * screenHeight),
-                  ExpandableCardUwi(
-                      nama: "Rumah Pak Yoga", alamat: "Jl Sawi No.3"),
-                  SizedBox(height: 10 / 917 * screenHeight),
-                ])),
-              )
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: suggestions.length,
+                        itemBuilder: (context, index) {
+                          final suggestion = suggestions[index]['description'];
+                          List<String> parts =
+                              suggestion.split(","); // Split name and address
+
+                          String nama =
+                              parts.isNotEmpty ? parts[0] : "Unknown Name";
+                          String alamat =
+                              parts.length > 1 ? parts[1] : "Unknown Address";
+                          return Column(
+                            children: [
+                              ExpandableCardUwi(
+                                nama: nama,
+                                alamat: alamat,
+                                pintuMasuk1: "Gerbang Masuk",
+                                pintuMasuk2: "Lobby Utama",
+                              ),
+                              SizedBox(height: 10 / 917 * screenHeight),
+                            ],
+                          );
+                        })),
+              ),
             ],
           ),
         ));

@@ -80,7 +80,7 @@ class _ExpandableCardUwiState extends State<ExpandableCardUwi> {
                     children: [
                       Text(
                         widget.nama,
-                        style: TextStyle(fontSize: 20, color: Colors.black),
+                        style: TextStyle(fontSize: 15, color: Colors.black),
                       ),
                       Text(
                         widget.alamat,

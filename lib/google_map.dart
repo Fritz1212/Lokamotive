@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart' as location;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -8,8 +8,13 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+class GlobalonPage {
+  static String onPage = '';
+}
+
 class GoogleMapWidget extends StatefulWidget {
-  const GoogleMapWidget({super.key});
+  const GoogleMapWidget({Key? key, required this.onPage}) : super(key: key);
+  final String onPage;
 
   @override
   State<GoogleMapWidget> createState() => _GoogleMapWidgetState();
@@ -22,6 +27,9 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   final LatLng _target = LatLng(-6.2145557175814465, 106.80063812452127);
   final String _apiKey = "AIzaSyDCQcVU2E2VKsb2cn-FYiE1Jry0IHsSe2o";
 
+  LatLng? _currentLocation;
+  List<Marker> _markers = [];
+
   List<LatLng> polylineCoordinates = [];
   List<LatLng> _currentRoute = [];
   Set<Polyline> _polylines = {};
@@ -31,7 +39,57 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   @override
   void initState() {
     super.initState();
-    _getRoute();
+    if (GlobalonPage.onPage == "detailPage") {
+      _getRoute();
+    } else {
+      _getCurrentLocation();
+    }
+    GlobalonPage.onPage = widget.onPage;
+  }
+
+  Future<void> _fetchNearbyTrainStations(double lat, double lng) async {
+    String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+        "?location=-6.5971,106.8060"
+        "&radius=50000"
+        "&type=train_station"
+        "&key=$_apiKey";
+
+    final response = await http.get(Uri.parse(url));
+    print(response.body);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      List results = data['results'];
+
+      List<Marker> trainMarkers = results.map((place) {
+        return Marker(
+          markerId: MarkerId(place['place_id']),
+          position: LatLng(
+            place['geometry']['location']['lat'],
+            place['geometry']['location']['lng'],
+          ),
+          infoWindow: InfoWindow(
+            title: place['name'],
+            snippet: place['vicinity'],
+          ),
+        );
+      }).toList();
+
+      setState(() {
+        _markers.addAll(trainMarkers);
+      });
+    }
+  }
+
+  Future<void> _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+    });
+
+    _fetchNearbyTrainStations(position.latitude, position.longitude);
   }
 
   Future<void> _fetchRoute() async {
@@ -129,24 +187,27 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   void _getRoute() async {
     PolylinePoints polylinePoints = PolylinePoints();
 
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleApiKey: _apiKey,
-      request: PolylineRequest(
-        origin: PointLatLng(_center.latitude, _center.longitude),
-        destination: PointLatLng(_target.latitude, _target.longitude),
-        mode: TravelMode.driving,
-      ),
-    );
+    if (GlobalonPage.onPage == "detailPage") {
+      _fetchNearbyTrainStations(_center.latitude, _center.longitude);
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        googleApiKey: _apiKey,
+        request: PolylineRequest(
+          origin: PointLatLng(_center.latitude, _center.longitude),
+          destination: PointLatLng(_target.latitude, _target.longitude),
+          mode: TravelMode.driving,
+        ),
+      );
 
-    if (result.points.isNotEmpty) {
-      polylineCoordinates.clear();
-      for (var point in result.points) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      if (result.points.isNotEmpty) {
+        polylineCoordinates.clear();
+        for (var point in result.points) {
+          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        }
+
+        _startAnimation(); // Start animating the polyline
+      } else {
+        print("Error: ${result.errorMessage}");
       }
-
-      _startAnimation(); // Start animating the polyline
-    } else {
-      print("Error: ${result.errorMessage}");
     }
   }
 
@@ -168,7 +229,11 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     mapController = controller;
 
     Future.delayed(Duration(milliseconds: 500), () {
-      _adjustCamera();
+      if (GlobalonPage.onPage == "detailPage") {
+        _adjustCamera();
+      } else {
+        print("");
+      }
     });
   }
 
@@ -182,16 +247,19 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         zoom: 11.0,
       ),
       markers: {
-        Marker(
-          markerId: MarkerId('Your Location'),
-          icon: BitmapDescriptor.defaultMarker,
-          position: _center,
-        ),
-        Marker(
-          markerId: MarkerId('Your Destination'),
-          icon: BitmapDescriptor.defaultMarker,
-          position: _target,
-        )
+        if (GlobalonPage.onPage == "detailPage")
+          Marker(
+            markerId: MarkerId('Your Location'),
+            icon: BitmapDescriptor.defaultMarker,
+            position: _center,
+          ),
+        if (GlobalonPage.onPage == "detailPage")
+          Marker(
+            markerId: MarkerId('Your Destination'),
+            icon: BitmapDescriptor.defaultMarker,
+            position: _target,
+          ),
+        ..._markers
       },
     );
   }
