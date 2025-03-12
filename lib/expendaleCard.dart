@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'RoutePage2.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class ExpandableCardUwi extends StatefulWidget {
   final String nama;
@@ -15,17 +17,40 @@ class ExpandableCardUwi extends StatefulWidget {
     this.pintuMasuk2,
   }) : super(key: key);
 
+  Future<Position> getCurrentLocation() {
+    return Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
+  Future<String> getPlaceName(double latitude, double longitude) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        return "${place.name}";
+      } else {
+        return "No place found";
+      }
+    } catch (e) {
+      return "Error: $e";
+    }
+  }
+
   @override
   _ExpandableCardUwiState createState() => _ExpandableCardUwiState();
 }
 
 class _ExpandableCardUwiState extends State<ExpandableCardUwi> {
   bool _isExpanded = false;
-
   bool get _hasPintuMasuk =>
       widget.pintuMasuk1 != null || widget.pintuMasuk2 != null;
 
-  void _onCardTap() {
+  void _onCardTap() async {
+    Position posisi = await widget.getCurrentLocation();
+    String namaTempat =
+        await widget.getPlaceName(posisi.latitude, posisi.longitude);
     if (_hasPintuMasuk) {
       setState(() {
         _isExpanded = !_isExpanded;
@@ -34,19 +59,22 @@ class _ExpandableCardUwiState extends State<ExpandableCardUwi> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RutePage2(
-              namaLokasi: 'Rumah Talenta BCA', lokasiTujuan: widget.nama),
+          builder: (context) =>
+              RutePage2(namaLokasi: namaTempat, lokasiTujuan: widget.nama),
         ),
       );
     }
   }
 
-  void _navigateToNextPage(String pintuMasuk) {
+  void _navigateToNextPage(String pintuMasuk) async {
+    Position posisi = await widget.getCurrentLocation();
+    String namaTempat =
+        await widget.getPlaceName(posisi.latitude, posisi.longitude);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => RutePage2(
-          namaLokasi: 'Rumah Talenta BCA',
+          namaLokasi: namaTempat,
           lokasiTujuan: widget.nama,
         ),
       ),
@@ -64,7 +92,7 @@ class _ExpandableCardUwiState extends State<ExpandableCardUwi> {
             // Bagian utama yang bisa diklik
             Container(
               width: 287,
-              height: 65,
+              height: 80,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Color(0xFFEAEAEA),
@@ -74,20 +102,25 @@ class _ExpandableCardUwiState extends State<ExpandableCardUwi> {
                 children: [
                   Icon(Icons.history, color: Colors.black),
                   SizedBox(width: 10),
-                  Column(
+                  Expanded(
+                      child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         widget.nama,
                         style: TextStyle(fontSize: 15, color: Colors.black),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
                       ),
                       Text(
                         widget.alamat,
                         style: TextStyle(fontSize: 10, color: Colors.black),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
                       ),
                     ],
-                  )
+                  )),
                 ],
               ),
             ),

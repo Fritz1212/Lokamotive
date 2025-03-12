@@ -16,10 +16,35 @@ class RutePage2 extends StatelessWidget {
     Key? key,
     required this.lokasiTujuan,
     required this.namaLokasi,
-  }) : super(key: key);
+  }) : super(key: key) {
+    _asal.addListener(() {
+      userTypedAsal = true;
+    });
+    _tujuan.addListener(() {
+      userTypedTujuan = true;
+    });
+  }
 
   TextEditingController _asal = TextEditingController();
   TextEditingController _tujuan = TextEditingController();
+  bool userTypedAsal = false;
+  bool userTypedTujuan = false;
+
+  String asal() {
+    if (userTypedAsal == true) {
+      return _asal.text;
+    } else {
+      return lokasiTujuan;
+    }
+  }
+
+  String tujuan() {
+    if (userTypedAsal == true) {
+      return _tujuan.text;
+    } else {
+      return namaLokasi;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,14 +125,10 @@ class RutePage2 extends StatelessWidget {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-<<<<<<< Updated upstream
-                              builder: (context) => detailPage()));
-=======
                               builder: (context) => DetailPage(
-                                    asal: _asal.text,
-                                    tujuan: _tujuan.text,
+                                    asal: tujuan(),
+                                    tujuan: asal(),
                                   )));
->>>>>>> Stashed changes
                     },
                   ),
                   _buildRouteItem("200", "Bogor", "Tanah Abang 2", "30",

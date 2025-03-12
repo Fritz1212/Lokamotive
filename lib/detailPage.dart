@@ -5,10 +5,6 @@ import 'package:lokamotive/RoutePage2.dart';
 import 'endPage.dart';
 import 'google_map.dart';
 
-<<<<<<< Updated upstream
-class detailPage extends StatelessWidget {
-  const detailPage({super.key});
-=======
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key, required this.asal, required this.tujuan});
   final String asal;
@@ -19,8 +15,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  double sheetPosition = 0.3; // Initial position (matches initialChildSize)
->>>>>>> Stashed changes
+  double sheetPosition = 0.3;
 
   Widget _buildStationRow(String station, String time, String price) {
     return Padding(
@@ -52,64 +47,13 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox.expand(
-<<<<<<< Updated upstream
-          child: Stack(
-        children: [
-          Container(child: GoogleMapWidget()),
-          Container(
-            margin: EdgeInsets.only(top: 50),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 350,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.all(8),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset("assets/Image/Group 63.png",
-                                width: 50, height: 30),
-                            Image.asset("assets/Image/Ellipse 40.png",
-                                width: 5, height: 5),
-                            Image.asset("assets/Image/Ellipse 40.png",
-                                width: 5, height: 5),
-                            Image.asset("assets/Image/Ellipse 40.png",
-                                width: 5, height: 5),
-                            Image.asset("assets/Image/mdi_location.png",
-                                width: 50, height: 30),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 250,
-                            height: 30,
-                            color: Colors.white,
-                            child: Row(
-=======
         child: Stack(
           children: [
             // Google Map Background
-            Container(child: GoogleMapWidget(onPage: "detailPage")),
+            Container(
+                child: GoogleMapWidget(
+              onPage: 'detailPage',
+            )),
 
             // Floating Card at the Top
             Container(
@@ -173,46 +117,17 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                             ),
                             Row(
->>>>>>> Stashed changes
                               children: [
-                                Text(
-                                  "Rumah Talenta BCA",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black),
-                                ),
+                                SizedBox(
+                                  width: 250,
+                                  child: Divider(
+                                    color: Colors.black,
+                                    height: 10,
+                                    thickness: 1,
+                                  ),
+                                )
                               ],
                             ),
-<<<<<<< Updated upstream
-                          ),
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 250,
-                                child: Divider(
-                                  color: Colors.black,
-                                  height: 10,
-                                  thickness: 1,
-                                ),
-                              )
-                            ],
-                          ),
-                          Container(
-                            width: 250,
-                            height: 30,
-                            color: Colors.white,
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Indonesia Arena",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black),
-                                ),
-                              ],
-=======
                             Container(
                               width: 250,
                               height: 30,
@@ -228,170 +143,144 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                 ],
                               ),
->>>>>>> Stashed changes
                             ),
-                          ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            // Draggable Scrollable Sheet with Tracking
+            Positioned.fill(
+              child: NotificationListener<DraggableScrollableNotification>(
+                onNotification: (notification) {
+                  setState(() {
+                    sheetPosition =
+                        notification.extent; // Track position dynamically
+                  });
+                  return true;
+                },
+                child: DraggableScrollableSheet(
+                  initialChildSize: 0.3,
+                  minChildSize: 0.2,
+                  maxChildSize: 0.8,
+                  builder: (context, scrollController) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(48)),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black26, blurRadius: 10)
                         ],
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            top: 420,
-            left: 20,
-            child: Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RutePage2(
-                              lokasiTujuan: "Rumah Talenta BCA",
-                              namaLokasi: "Indonesia Arena")));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: CircleBorder(),
-                ),
-                child: Icon(Icons.arrow_back, color: Colors.black),
-              ),
-            ),
-          ),
-
-          Positioned.fill(
-              child: Align(
-            alignment: Alignment.bottomCenter,
-            child: DraggableScrollableSheet(
-              initialChildSize: 0.3, // Start at 30% of screen height
-              minChildSize: 0.2, // Minimum height when collapsed
-              maxChildSize: 0.8, // Maximum height when expanded
-              builder: (context, scrollController) {
-                return Container(
-                  constraints: BoxConstraints.expand(),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(48)),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black26, blurRadius: 10),
-                    ], // End of BoxShadow
-                  ), // End of BoxDecoration
-                  padding: EdgeInsets.all(16),
-                  child: SingleChildScrollView(
-                    controller: scrollController, // Enables scrolling
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          width: 100,
-                          height: 2,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(10),
-                          ), // End of BoxDecoration
-                        ), // End of Container
-
-                        SizedBox(height: 35),
-
-                        Container(
-                          padding: EdgeInsets.all(20),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Column(
-                                  children: [
-                                    Container(
-                                      width: 300,
-                                      color: Colors.transparent,
-                                      child: Text(
-                                        "2h 30min (Rp 10.000,00)",
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.orange,
-                                        ), // End of TextStyle
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 1,
+                              width: 200,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(color: Colors.grey),
+                              ),
+                            ),
+                            SizedBox(height: 35),
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 300,
+                                    color: Colors.transparent,
+                                    child: Text(
+                                      "2h 30min (Rp 10.000,00)",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.orange,
                                       ),
                                     ),
-                                    Container(
-                                      color: Colors.transparent,
-                                      width: 300,
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            _buildStationRow(
-                                                "KRL Station, Bogor",
-                                                "09:00",
-                                                "Rp 6.500,00"),
-                                          ]),
-                                    ),
-                                    Container(
-                                      color: Colors.transparent,
-                                      width: 300,
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            _buildStationRow(
-                                                "KRL Station, Manggarai",
-                                                "09:15",
-                                                "Rp 6.500,00"), // End of Text
-                                          ]),
-                                    )
-                                  ],
-                                ),
-                              ]),
+                                  ),
+                                  _buildStationRow("KRL Station, Bogor",
+                                      "09:00", "Rp 6.500,00"),
+                                  _buildStationRow("KRL Station, Manggarai",
+                                      "09:15", "Rp 6.500,00"),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                          ],
                         ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
 
-                        SingleChildScrollView(
-                          controller: scrollController,
+            // Floating Back Button that follows the drawer
+            Positioned(
+              bottom: MediaQuery.of(context).size.height * sheetPosition + 15,
+              left: 16,
+              child: Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RutePage2(
+                          lokasiTujuan: "Rumah Talenta BCA",
+                          namaLokasi: "Indonesia Arena",
                         ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: CircleBorder(),
+                  ),
+                  child: Icon(Icons.arrow_back, color: Colors.black),
+                ),
+              ),
+            ),
 
-                        SizedBox(height: 20),
-                      ], // End of Column children
-                    ), // End of Column
-                  ), // End of SingleChildScrollView
-                ); // End of Container
-              }, // End of builder
-            ), // End of DraggableScrollableSheet
-          )),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Container(
+            // Done Button
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
                 margin: EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => endPage()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => endPage()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 34, 84, 119),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
-                    ), // End of RoundedRectangleBorder
+                    ),
                     minimumSize: Size(350, 60),
-                  ), // End of ElevatedButton.styleFrom
+                  ),
                   child: Text("Done",
                       style: TextStyle(fontSize: 20, color: Colors.white)),
-                ), // End of ElevatedButton
+                ),
               ),
-            ]),
-          ]),
-
-          // End of Positioned
-        ],
-      )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
