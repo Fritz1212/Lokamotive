@@ -106,13 +106,17 @@ class _DetailPageState extends State<DetailPage> {
                               color: Colors.white,
                               child: Row(
                                 children: [
-                                  Text(
+                                  Flexible(
+                                    child: Text(
                                     widget.asal,
                                     style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.normal,
                                         color: Colors.black),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1, 
                                   ),
+                                  ) 
                                 ],
                               ),
                             ),
@@ -134,13 +138,17 @@ class _DetailPageState extends State<DetailPage> {
                               color: Colors.white,
                               child: Row(
                                 children: [
-                                  Text(
+                                  Flexible(
+                                    child: Text(
                                     widget.tujuan,
                                     style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.normal,
                                         color: Colors.black),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
+                                  )
                                 ],
                               ),
                             ),

@@ -19,7 +19,7 @@ class ExpandableCardUwi extends StatefulWidget {
 
   Future<Position> getCurrentLocation() {
     return Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.best));
   }
 
   Future<String> getPlaceName(double latitude, double longitude) async {
@@ -111,13 +111,14 @@ class _ExpandableCardUwiState extends State<ExpandableCardUwi> {
                         widget.nama,
                         style: TextStyle(fontSize: 15, color: Colors.black),
                         softWrap: true,
-                        overflow: TextOverflow.visible,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         widget.alamat,
                         style: TextStyle(fontSize: 10, color: Colors.black),
                         softWrap: true,
-                        overflow: TextOverflow.visible,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ],
                   )),
