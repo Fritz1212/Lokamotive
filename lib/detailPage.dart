@@ -239,8 +239,8 @@ class _DetailPageState extends State<DetailPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => RutePage2(
-                          lokasiTujuan: "Rumah Talenta BCA",
-                          namaLokasi: "Indonesia Arena",
+                          lokasiTujuan: widget.tujuan,
+                          namaLokasi: widget.asal,
                         ),
                       ),
                     );

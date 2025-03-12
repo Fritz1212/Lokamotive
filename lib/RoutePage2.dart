@@ -10,7 +10,7 @@ import 'detailPage.dart';
 
 class RutePage2 extends StatelessWidget {
   final String lokasiTujuan;
-  final String namaLokasi;
+  final String namaLokasi; //asal
 
   RutePage2({
     Key? key,
@@ -34,7 +34,7 @@ class RutePage2 extends StatelessWidget {
     if (userTypedAsal == true) {
       return _asal.text;
     } else {
-      return lokasiTujuan;
+      return namaLokasi;
     }
   }
 
@@ -42,7 +42,7 @@ class RutePage2 extends StatelessWidget {
     if (userTypedAsal == true) {
       return _tujuan.text;
     } else {
-      return namaLokasi;
+      return lokasiTujuan;
     }
   }
 
@@ -126,8 +126,8 @@ class RutePage2 extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => DetailPage(
-                                    asal: tujuan(),
-                                    tujuan: asal(),
+                                    asal: asal(),
+                                    tujuan: tujuan(),
                                   )));
                     },
                   ),

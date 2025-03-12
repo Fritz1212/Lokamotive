@@ -60,8 +60,8 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       final data = json.decode(response.body);
       List results = data['results'];
 
-      final BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(size: Size(1, 1)),
+      final BitmapDescriptor customIcon = await BitmapDescriptor.asset(
+        ImageConfiguration(size: Size(20, 25)),
         'assets/train_station_icon.png',
       );
 
