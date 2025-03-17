@@ -15,7 +15,7 @@ class _AccountRegistrationState extends State<AccountRegistration> {
   @override
   void initState() {
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://10.68.110.167:3000');
+    channel = IOWebSocketChannel.connect('ws://192.168.115.24:3000');
   }
 
   void sendAccount(String message) {
@@ -41,7 +41,8 @@ class _AccountRegistrationState extends State<AccountRegistration> {
 
   void validateInputs() {
     setState(() {
-      fullNameError =fullNameController.text.isEmpty ? "Full Name is required" : null;
+      fullNameError =
+          fullNameController.text.isEmpty ? "Full Name is required" : null;
       emailError = emailController.text.isEmpty ? "Email is required" : null;
       passwordError = passwordController.text.length < 6
           ? "Password must be at least 6 characters"

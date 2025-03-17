@@ -53,6 +53,7 @@ class _DetailPageState extends State<DetailPage> {
             Container(
                 child: GoogleMapWidget(
               onPage: 'detailPage',
+              target: widget.tujuan,
             )),
 
             // Floating Card at the Top

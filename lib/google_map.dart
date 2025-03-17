@@ -7,14 +7,17 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:geocoding/geocoding.dart';
 
 class GlobalonPage {
   static String onPage = '';
 }
 
 class GoogleMapWidget extends StatefulWidget {
-  const GoogleMapWidget({Key? key, required this.onPage}) : super(key: key);
+  const GoogleMapWidget({Key? key, required this.onPage, required this.target})
+      : super(key: key);
   final String onPage;
+  final String target;
 
   @override
   State<GoogleMapWidget> createState() => _GoogleMapWidgetState();
@@ -23,33 +26,53 @@ class GoogleMapWidget extends StatefulWidget {
 class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   late GoogleMapController mapController;
 
-  final LatLng _center = LatLng(-6.585267761752595, 106.88177004571635);
-  final LatLng _target = LatLng(-6.2145557175814465, 106.80063812452127);
+  late LatLng _center = LatLng(-6.585267761752595, 106.88177004571635);
+  late LatLng _target;
   final String _apiKey = "AIzaSyDCQcVU2E2VKsb2cn-FYiE1Jry0IHsSe2o";
 
   LatLng? _currentLocation;
   List<Marker> _markers = [];
+  BitmapDescriptor? _customIcon;
 
   List<LatLng> polylineCoordinates = [];
   List<LatLng> _currentRoute = [];
   Set<Polyline> _polylines = {};
   int _currentIndex = 0;
   Timer? _timer;
+  bool _isTargetInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    if (GlobalonPage.onPage == "detailPage") {
-      _getRoute();
-    } else {
-      _getCurrentLocation();
-    }
     GlobalonPage.onPage = widget.onPage;
+    _initializeTarget();
+  }
+
+  Future<void> _initializeTarget() async {
+    try {
+      _target = await _getLatLngFromPlaceName(widget.target);
+      setState(() {
+        _isTargetInitialized = true;
+      });
+      _getCurrentLocation(); // Call _getCurrentLocation after initializing the target
+      _getRoute();
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<LatLng> _getLatLngFromPlaceName(String placeName) async {
+    List<Location> locations = await locationFromAddress(placeName);
+    if (locations.isNotEmpty) {
+      return LatLng(locations.first.latitude, locations.first.longitude);
+    } else {
+      throw Exception('No location found for the given place name.');
+    }
   }
 
   Future<void> _fetchNearbyTrainStations(double lat, double lng) async {
     String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
-        "?location=-6.5971,106.8060"
+        "?location=$lat,$lng"
         "&radius=50000"
         "&type=train_station"
         "&key=$_apiKey";
@@ -60,8 +83,8 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       final data = json.decode(response.body);
       List results = data['results'];
 
-      final BitmapDescriptor customIcon = await BitmapDescriptor.asset(
-        ImageConfiguration(size: Size(20, 25)),
+      _customIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(48, 48)),
         'assets/train_station_icon.png',
       );
 
@@ -72,7 +95,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
             place['geometry']['location']['lat'],
             place['geometry']['location']['lng'],
           ),
-          icon: customIcon,
+          icon: _customIcon!,
           infoWindow: InfoWindow(
             title: place['name'],
             snippet: place['vicinity'],
@@ -245,6 +268,10 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isTargetInitialized) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     return GoogleMap(
       onMapCreated: _onMapCreated,
       polylines: _polylines,
@@ -263,6 +290,12 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
           Marker(
             markerId: MarkerId('Your Destination'),
             icon: BitmapDescriptor.defaultMarker,
+            position: _target,
+          ),
+        if (GlobalonPage.onPage == "RutePage2" && _customIcon != null)
+          Marker(
+            markerId: MarkerId('Custom Icon'),
+            icon: _customIcon!,
             position: _target,
           ),
         ..._markers

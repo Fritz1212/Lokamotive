@@ -97,7 +97,8 @@ class RutePage2 extends StatelessWidget {
                           width: 341 / 412 * screenWidth,
                           color: Colors.white,
                           child: Center(
-                              child: GoogleMapWidget(onPage: "RoutePage2")),
+                              child: GoogleMapWidget(
+                                  onPage: "RoutePage2", target: lokasiTujuan)),
                         ),
                       ),
                     ),
