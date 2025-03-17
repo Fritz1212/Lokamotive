@@ -1,34 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:lokamotive/pages/schedule3.dart';
 import 'schedule1.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
-class Schedule2 extends StatelessWidget {
+class Schedule2 extends StatefulWidget {
   const Schedule2({super.key});
 
   @override
+  _Schedule2State createState() => _Schedule2State();
+}
+
+class _Schedule2State extends State<Schedule2> {
+  List<String> stationNames = [];
+  String selectedStation = "Departure Station";
+  String searchQuery = ""; 
+
+  @override
+  void initState() {
+    super.initState();
+    loadStations();
+  }
+
+  void updateSearchQuery(String query) {
+    setState(() {
+      searchQuery = query;
+    });
+  }
+
+  Future<void> loadStations() async {
+    String data = await rootBundle.loadString('assets/station.json');
+    Map<String, dynamic> jsonData = json.decode(data);
+    List<dynamic> stations = jsonData['data'];
+    setState(() {
+      stationNames = stations.map((station) => station['name'].toString()).toList();
+    });
+  }
+
+  List<String> getFilteredStations() {
+    if (searchQuery.isEmpty) {
+      return stationNames; 
+    }
+    return stationNames
+        .where((station) =>
+            station.toLowerCase().contains(searchQuery.toLowerCase()))
+        .toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Column(
-          children: [
-            Expanded(
-                child: Stack(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Column(
+        children: [
+          Expanded(
+            child: Stack(
               clipBehavior: Clip.none,
               children: [
                 TopFunc(),
-                SearchSchedule(),
+                SearchSchedule(
+                  selectedStation: selectedStation, 
+                  onSearchQueryChanged: updateSearchQuery, 
+                  onScheduleUpdated: '',
+                ),
                 ReturnButton(),
               ],
-            )),
-            ListTrain()
-            // Container(height: MediaQuery.of(context).size.height * 0.06),
-            // const Expanded(
-            //   flex: 2,
-            //   child: ListTrain()
-            // ),
-          ],
-        ));
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(30.0),
+              itemCount: getFilteredStations().length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedStation = getFilteredStations()[index]; // Perbarui selectedStation
+                    });
+                  },
+                  child: TrainContainer(text: getFilteredStations()[index]),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
+}
+
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false; // Mencegah keyboard muncul
 }
 
 class TopFunc extends StatelessWidget {
@@ -82,29 +146,29 @@ class ReturnButton extends StatelessWidget {
 }
 
 class TimePickerScreen extends StatefulWidget {
-  final String labelText; // Parameter untuk teks label
+  final String labelText;
+  final Function(TimeOfDay) onTimeSelected;
 
-  const TimePickerScreen({super.key, required this.labelText});
+  const TimePickerScreen({super.key, required this.labelText, required this.onTimeSelected});
 
   @override
   _TimePickerScreenState createState() => _TimePickerScreenState();
 }
 
 class _TimePickerScreenState extends State<TimePickerScreen> {
-  TimeOfDay? _selectedTime; // State untuk menyimpan waktu yang dipilih
+  TimeOfDay? _selectedTime;
 
-  // Fungsi untuk menampilkan TimePicker
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialTime:
-          _selectedTime ?? TimeOfDay.now(), // Waktu awal yang ditampilkan
+      initialTime: _selectedTime ?? TimeOfDay.now(),
     );
 
     if (pickedTime != null && pickedTime != _selectedTime) {
       setState(() {
-        _selectedTime = pickedTime; // Perbarui state dengan waktu yang dipilih
+        _selectedTime = pickedTime;
       });
+      widget.onTimeSelected(pickedTime);
     }
   }
 
@@ -112,9 +176,9 @@ class _TimePickerScreenState extends State<TimePickerScreen> {
   Widget build(BuildContext context) {
     return Center(
       child: TimePickerButton(
-        labelText: widget.labelText, // Teruskan labelText ke TimePickerButton
-        selectedTime: _selectedTime, // Waktu yang dipilih
-        onTimePicked: () => _selectTime(context), // Panggil fungsi _selectTime
+        labelText: widget.labelText,
+        selectedTime: _selectedTime,
+        onTimePicked: () => _selectTime(context),
       ),
     );
   }
@@ -160,7 +224,7 @@ class TimePickerButton extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      labelText, // Tampilkan teks label di sini
+                      labelText, 
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
@@ -199,24 +263,77 @@ class TimePickerButton extends StatelessWidget {
 }
 
 class SearchSchedule extends StatefulWidget {
-  const SearchSchedule({super.key});
+  final String selectedStation;
+  final Function(String) onSearchQueryChanged;
+  final String onScheduleUpdated;
+  final bool isReadOnly;
+
+  const SearchSchedule({
+    required this.selectedStation,
+    required this.onSearchQueryChanged,
+    required this.onScheduleUpdated,
+    this.isReadOnly = false,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _SearchScheduleState createState() => _SearchScheduleState();
 }
 
 class _SearchScheduleState extends State<SearchSchedule> {
-  TimeOfDay? selectedTime;
+  TimeOfDay? selectedTimeFrom;
+  TimeOfDay? selectedTimeUntil;
+  late TextEditingController _stationController; 
+  int _selectedValue = -1;
+  String scheduleText = "Select Train Schedule";
+
+  String getScheduleText() {
+    if ( _selectedValue == -1) {
+      return "Select Train Schedule"; 
+    } else if (_selectedValue == 0) {
+      return "1 Today"; 
+    } else if (_selectedValue == 1) {
+      if (selectedTimeFrom != null && selectedTimeUntil != null) {
+        return "Set Your Own Schedule: From ${selectedTimeFrom!.format(context)} Until ${selectedTimeUntil!.format(context)}";
+      } else {
+        return "Set Your Own Schedule"; 
+      }
+    } else {
+      return "Select Train Schedule";
+    }
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    _stationController = TextEditingController(text: widget.selectedStation);
+    _selectedValue = -1; 
+  }
+
+  @override
+  void didUpdateWidget(SearchSchedule oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedStation != widget.selectedStation) {
+      _stationController.text = widget.selectedStation;
+    }
+  }
+
+  @override
+  void dispose() {
+    _stationController.dispose(); 
+    super.dispose();
+  }
 
   void scheduleTrain2(BuildContext context) {
+    String scheduleText = getScheduleText();
+    if (widget.isReadOnly) return;
+
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
       ),
       builder: (context) {
-        int _selectedValue = 0;
-
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return Container(
@@ -331,19 +448,27 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    child: const TimePickerScreen(
+                                    width: MediaQuery.of(context).size.width * 0.35,
+                                    child: TimePickerScreen(
                                       labelText: "From",
+                                      onTimeSelected: (time) {
+                                        setModalState(() {
+                                          selectedTimeFrom = time;
+                                        });
+                                      },
                                     ),
                                   ),
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    child: const TimePickerScreen(
+                                    width: MediaQuery.of(context).size.width * 0.35,
+                                    child: TimePickerScreen(
                                       labelText: "Until",
+                                      onTimeSelected: (time) {
+                                        setModalState(() {
+                                          selectedTimeUntil = time;
+                                        });
+                                      },
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
@@ -354,23 +479,30 @@ class _SearchScheduleState extends State<SearchSchedule> {
                               width: MediaQuery.of(context).size.width * 0.8,
                               height: MediaQuery.of(context).size.height * 0.06,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(PageRouteBuilder(
-                                    pageBuilder: (context, animation,
-                                            secondaryAnimation) =>
-                                        Schedule3(),
-                                    transitionsBuilder: (context, animation,
-                                        secondaryAnimation, child) {
-                                      return SlideTransition(
-                                        position: Tween<Offset>(
-                                          begin: const Offset(1.0, 0.0),
-                                          end: Offset.zero,
-                                        ).animate(animation),
-                                        child: child,
-                                      );
-                                    },
-                                  ));
-                                },
+                                onPressed: (widget.selectedStation != "Departure Station" && (_selectedValue == 0 || (_selectedValue == 1 && selectedTimeFrom != null && selectedTimeUntil != null)))
+                                  ? () {
+                                      setState(() {
+                                        _selectedValue = _selectedValue;
+                                        selectedTimeFrom = selectedTimeFrom;
+                                        selectedTimeUntil = selectedTimeUntil;
+                                      });
+                                      setModalState(() {
+                                        scheduleText = getScheduleText();
+                                      });
+                                      Navigator.of(context).push(PageRouteBuilder(
+                                        pageBuilder: (context, animation, secondaryAnimation) => Schedule3(selectedStation: widget.selectedStation, updateSearchQuery: widget.onSearchQueryChanged, scheduleText: scheduleText,),
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          return SlideTransition(
+                                            position: Tween<Offset>(
+                                              begin: const Offset(1.0, 0.0),
+                                              end: Offset.zero,
+                                            ).animate(animation),
+                                            child: child,
+                                          );
+                                        },
+                                      ));
+                                    }
+                                  : null, 
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF225477),
                                   shape: RoundedRectangleBorder(
@@ -379,8 +511,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                 ),
                                 child: const Text(
                                   "Apply",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
+                                  style: TextStyle(fontSize: 16, color: Colors.white),
                                 ),
                               ),
                             ),
@@ -450,38 +581,43 @@ class _SearchScheduleState extends State<SearchSchedule> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            height: MediaQuery.of(context).size.height * 0.03,
-                            child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Station",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Color.fromARGB(89, 0, 0, 0),
-                                    ),
-                                  ),
-                                ])),
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          height: MediaQuery.of(context).size.height * 0.03,
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Station",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromARGB(89, 0, 0, 0),
+                                ),
+                              ),
+                            ]
+                          )
+                        ),
                         SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            height: MediaQuery.of(context).size.height * 0.03,
-                            child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                      child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: "Departure Station",
-                                      border: InputBorder.none,
-                                    ),
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                    ),
-                                  )),
-                                ])),
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          height: MediaQuery.of(context).size.height * 0.03,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: TextEditingController(text: widget.selectedStation),
+                                  readOnly: widget.isReadOnly, 
+                                  focusNode: widget.isReadOnly ? AlwaysDisabledFocusNode() : null, 
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  style: const TextStyle(fontSize: 17, color: Colors.black),
+                                ),
+                              ),
+                            ]
+                          )
+                        ),
                       ],
                     ),
                   ),
@@ -497,56 +633,59 @@ class _SearchScheduleState extends State<SearchSchedule> {
               ),
             ),
             GestureDetector(
-                onTap: () {
-                  scheduleTrain2(context);
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.75,
-                  height: MediaQuery.of(context).size.height * 0.07,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.1,
-                        height: 40,
-                        child: Image.asset("assets/Vector(1).png"),
+              onTap: () {
+                scheduleTrain2(context);
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                height: MediaQuery.of(context).size.height * 0.07,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.1,
+                      height: 40,
+                      child: Image.asset("assets/Vector(1).png"),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment:CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Schedule",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color.fromARGB(89, 0, 0, 0)),
+                                  ),
+                                Text(
+                                  widget.onScheduleUpdated.isNotEmpty ? widget.onScheduleUpdated : getScheduleText(),
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ]
+                            )
+                          ),
+                        ],
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.05,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.6,
-                        height: MediaQuery.of(context).size.height * 0.1,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: const Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Schedule",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: Color.fromARGB(89, 0, 0, 0)),
-                                      ),
-                                      Text(
-                                        "Select Train Schedule",
-                                        style: TextStyle(
-                                            fontSize: 17, color: Colors.black),
-                                      ),
-                                    ])),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
+                    )
+                  ],
+                ),
+              )
+            ),
           ],
         ),
       ),
@@ -557,7 +696,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
 class TrainContainer extends StatelessWidget {
   final String text;
 
-  const TrainContainer({super.key, required this.text});
+  const TrainContainer({required this.text, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -566,6 +705,7 @@ class TrainContainer extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width * 0.85,
           height: MediaQuery.of(context).size.height * 0.055,
+          color: Colors.transparent, // Pastikan warna tidak menghalangi interaksi
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -576,20 +716,10 @@ class TrainContainer extends StatelessWidget {
                 child: Image.asset("assets/Vector.png"),
               ),
               const SizedBox(width: 15),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: MediaQuery.of(context).size.height * 0.05,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      text,
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ],
+              Center(
+                child: Text(
+                  text,
+                  style: const TextStyle(fontSize: 15),
                 ),
               ),
             ],
@@ -606,30 +736,5 @@ class TrainContainer extends StatelessWidget {
         const SizedBox(height: 15),
       ],
     );
-  }
-}
-
-class ListTrain extends StatelessWidget {
-  const ListTrain({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.62,
-        child: ListView(
-          padding: const EdgeInsets.all(30.0),
-          children: const [
-            TrainContainer(text: "PESING"),
-            TrainContainer(text: "PALMERAH"),
-            TrainContainer(text: "JAKARTA KOTA"),
-            TrainContainer(text: "MANGGARAI"),
-            TrainContainer(text: "BOGOR"),
-            TrainContainer(text: "DEPOK"),
-            TrainContainer(text: "PARUNG PANJANG"),
-            TrainContainer(text: "PASAR MINGGU"),
-            TrainContainer(text: "CITAYAM"),
-          ],
-        ));
   }
 }

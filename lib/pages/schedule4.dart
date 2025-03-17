@@ -9,21 +9,23 @@ class Schedule4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Column(
-          children: [
-            Expanded(
-                child: Stack(
+      resizeToAvoidBottomInset: false,
+      body: Column(
+        children: [
+          Expanded(
+              child: Stack(
               clipBehavior: Clip.none,
               children: [
                 TopFunc(),
                 InfoTrain(),
                 ReturnButton(),
               ],
-            )),
-            TrainSchedule(),
-          ],
-        ));
+            )
+          ),
+          TrainSchedule(),
+        ],
+      )
+    );
   }
 }
 
@@ -40,8 +42,12 @@ class ReturnButton extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               Navigator.of(context).push(PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    const Schedule3(),
+                pageBuilder: (context, animation, secondaryAnimation) => 
+                  Schedule3(
+                    selectedStation: GlobalSchedule.selectedStation, 
+                    scheduleText: GlobalSchedule.scheduleText, 
+                    updateSearchQuery: GlobalSchedule.updateSearchQuery,
+                  ),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   return SlideTransition(

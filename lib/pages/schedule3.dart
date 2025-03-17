@@ -2,28 +2,69 @@ import 'package:flutter/material.dart';
 import 'package:lokamotive/pages/schedule4.dart';
 import 'schedule2.dart';
 
-class Schedule3 extends StatelessWidget {
-  const Schedule3({super.key});
+class Schedule3 extends StatefulWidget {
+  final String selectedStation;
+  final Function(String) updateSearchQuery;
+  final String scheduleText;
+  
+  const Schedule3({
+    Key? key,
+    required this.selectedStation,
+    required this.updateSearchQuery,
+    required this.scheduleText,
+  }) : super(key: key);
+
+  @override
+  _Schedule3State createState() => _Schedule3State();
+}
+
+class _Schedule3State extends State<Schedule3> {
+  String selectedSchedule = "Select Train Schedule";
+
+  void updateSchedule(String scheduleText) {
+    setState(() {
+      selectedSchedule = scheduleText;
+    });
+  }
+
+  void initState() {
+    super.initState();
+    GlobalSchedule.selectedStation = widget.selectedStation;
+    GlobalSchedule.scheduleText = widget.scheduleText;
+    GlobalSchedule.updateSearchQuery = widget.updateSearchQuery;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Column(
-          children: [
-            Expanded(
-                child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                TopFunc(),
-                SearchSchedule(),
-                ReturnButton(),
-              ],
-            )),
-            DestinationFunc(),
-          ],
-        ));
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Column(
+        children: [
+          Expanded(
+              child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              TopFunc(),
+              SearchSchedule(
+                selectedStation: widget.selectedStation, 
+                onSearchQueryChanged: widget.updateSearchQuery, 
+                onScheduleUpdated: widget.scheduleText,
+                isReadOnly: true,
+              ),
+              ReturnButton(),
+            ],
+          )),
+          DestinationFunc(),
+        ],
+      )
+    );
   }
+}
+
+class GlobalSchedule {
+  static String selectedStation = "";
+  static String scheduleText = "";
+  static Function(String) updateSearchQuery = (String query) {};
 }
 
 class ReturnButton extends StatelessWidget {
@@ -137,10 +178,7 @@ class TrainRouteCard extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.043,
+                              Center(
                                 child: Text(
                                   startStation,
                                   style: const TextStyle(
@@ -149,16 +187,12 @@ class TrainRouteCard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              Container(
                                 width: MediaQuery.of(context).size.width * 0.1,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.043,
+                                height: MediaQuery.of(context).size.height * 0.043,
                                 child: Image.asset("assets/Vector(3).png"),
                               ),
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.043,
+                              Center(
                                 child: Text(
                                   endStation,
                                   style: const TextStyle(
