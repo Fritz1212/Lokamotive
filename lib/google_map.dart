@@ -8,9 +8,50 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
+import 'dart:convert';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 class GlobalonPage {
   static String onPage = '';
+}
+
+class WebSocketService {
+  final String serverUrl =
+      "ws://192.168.115.24:3000"; // Change to your actual server URL
+  late WebSocketChannel channel;
+  Function(dynamic)? onMessageReceived;
+
+  void connect() {
+    channel = WebSocketChannel.connect(Uri.parse(serverUrl));
+    channel.stream.listen((message) {
+      print("Received: $message");
+      if (onMessageReceived != null) {
+        onMessageReceived!(jsonDecode(message));
+      }
+    }, onDone: () {
+      print("WebSocket closed.");
+    }, onError: (error) {
+      print("WebSocket error: $error");
+    });
+  }
+
+  void sendGetRecommendedRoutes(String userId, String start, String destination,
+      {String? preference}) {
+    final data = {
+      "action": "getRecommendedRoutes",
+      "userId": userId,
+      "start": start,
+      "destination": destination,
+      "preference": preference ?? "default"
+    };
+
+    channel.sink.add(jsonEncode(data));
+  }
+
+  // void disconnect() {
+  //   channel.sink.close(status.normalClosure);
+  // }
 }
 
 class GoogleMapWidget extends StatefulWidget {
@@ -25,12 +66,15 @@ class GoogleMapWidget extends StatefulWidget {
 
 class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   late GoogleMapController mapController;
+  final WebSocketService wsService = WebSocketService();
+  List<dynamic> routes = [];
 
   late LatLng _center = LatLng(-6.585267761752595, 106.88177004571635);
   late LatLng _target;
   final String _apiKey = "AIzaSyDCQcVU2E2VKsb2cn-FYiE1Jry0IHsSe2o";
 
   LatLng? _currentLocation;
+  String _currentLocationName = '';
   List<Marker> _markers = [];
   BitmapDescriptor? _customIcon;
 
@@ -45,17 +89,55 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   void initState() {
     super.initState();
     GlobalonPage.onPage = widget.onPage;
+    wsService.connect();
     _initializeTarget();
+    wsService.onMessageReceived = (data) {
+      setState(() {
+        if (data["routes"] != null) {
+          routes = data["routes"];
+        }
+      });
+    };
+  }
+
+  @override
+  void dispose() {
+    // wsService.disconnect();
+    super.dispose();
+  }
+
+  Future<List<Map<String, dynamic>>> getRoutes() async {
+    wsService.sendGetRecommendedRoutes(
+        "user123", _currentLocationName, widget.target,
+        preference: "fastest");
+
+    // Wait for the routes to be received
+    await Future.delayed(Duration(seconds: 2));
+
+    // Assuming routes are received and stored in the `routes` variable
+    return routes.map((route) {
+      return {
+        'coordinates': route['coordinates'].map((coord) {
+          return LatLng(coord['lat'], coord['lng']);
+        }).toList()
+      };
+    }).toList();
   }
 
   Future<void> _initializeTarget() async {
+    print("Entering _initializeTarget function");
     try {
       _target = await _getLatLngFromPlaceName(widget.target);
       setState(() {
         _isTargetInitialized = true;
       });
-      _getCurrentLocation(); // Call _getCurrentLocation after initializing the target
-      _getRoute();
+
+      setState(
+        () async {
+          await _getCurrentLocation(); // Call _getCurrentLocation after initializing the target
+          _getRoute();
+        },
+      );
     } catch (e) {
       print('Error: $e');
     }
@@ -103,9 +185,11 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         );
       }).toList();
 
-      setState(() {
-        _markers.addAll(trainMarkers);
-      });
+      if (mounted) {
+        setState(() {
+          _markers.addAll(trainMarkers);
+        });
+      }
     }
   }
 
@@ -114,11 +198,29 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
-    setState(() {
-      _currentLocation = LatLng(position.latitude, position.longitude);
-    });
+    String placeName = '';
 
     _fetchNearbyTrainStations(position.latitude, position.longitude);
+
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        placeName = "${place.name}, ${place.locality}, ${place.country}";
+        _currentLocationName = placeName;
+      }
+    } catch (e) {
+      print("Error getting place name: $e");
+    }
+
+    if (mounted) {
+      setState(() {
+        _currentLocation = LatLng(position.latitude, position.longitude);
+
+        print("Current location: $_currentLocationName");
+      });
+    }
   }
 
   Future<void> _fetchRoute() async {
@@ -135,6 +237,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         String encodedPolyline =
             data['routes'][0]['overview_polyline']['points'];
         polylineCoordinates = _decodePolyline(encodedPolyline);
+        print("Polyline coordinates: $polylineCoordinates");
         _startAnimation();
       }
     }
@@ -173,14 +276,26 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   /// Starts polyline animation by adding points gradually
+  /// Starts polyline animation by adding points gradually
   void _startAnimation() {
-    _timer = Timer.periodic(Duration(milliseconds: 1), (timer) {
+    print("Starting polyline animation...");
+    if (polylineCoordinates.isEmpty) {
+      print("No polyline coordinates to animate.");
+      return;
+    }
+
+    _currentIndex = 0; // Initialize the current index
+
+    _timer = Timer.periodic(Duration(milliseconds: 50), (timer) {
+      // Increase duration if needed
       if (_currentIndex < polylineCoordinates.length) {
-        setState(() {
-          _currentRoute.add(polylineCoordinates[_currentIndex]);
-          _currentIndex++;
-          _updatePolyline();
-        });
+        if (mounted) {
+          setState(() {
+            _currentRoute.add(polylineCoordinates[_currentIndex]);
+            _currentIndex++;
+            _updatePolyline();
+          });
+        }
       } else {
         _timer?.cancel();
       }
@@ -215,32 +330,71 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   void _getRoute() async {
     PolylinePoints polylinePoints = PolylinePoints();
-
+    print("tempat : $_currentLocationName");
     if (GlobalonPage.onPage == "detailPage") {
-      _fetchNearbyTrainStations(_center.latitude, _center.longitude);
-      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        googleApiKey: _apiKey,
-        request: PolylineRequest(
-          origin: PointLatLng(_center.latitude, _center.longitude),
-          destination: PointLatLng(_target.latitude, _target.longitude),
-          mode: TravelMode.driving,
-        ),
-      );
+      if (_currentLocationName == null || _currentLocationName.isEmpty) {
+        print("Error: _currentLocationName is not set.");
+        return;
+      }
 
-      if (result.points.isNotEmpty) {
-        polylineCoordinates.clear();
-        for (var point in result.points) {
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      // Fetch nearby train stations
+      _fetchNearbyTrainStations(_center.latitude, _center.longitude);
+
+      print("masuk sini");
+
+      // Send route request and get formatted routes
+      List<Map<String, dynamic>> formattedRoutes = await getRoutes();
+
+      List<List<LatLng>> allPolylines = []; // Store multiple polylines
+
+      for (var route in formattedRoutes) {
+        List<LatLng> polylineSegment = [];
+
+        for (int i = 0; i < route['coordinates'].length - 1; i++) {
+          var start = route['coordinates'][i];
+          var end = route['coordinates'][i + 1];
+
+          PolylineResult result =
+              await polylinePoints.getRouteBetweenCoordinates(
+            googleApiKey: _apiKey,
+            request: PolylineRequest(
+              origin: PointLatLng(start.latitude, start.longitude),
+              destination: PointLatLng(end.latitude, end.longitude),
+              mode: TravelMode.transit, // Change mode if needed
+            ),
+          );
+
+          if (result.points.isNotEmpty) {
+            for (var point in result.points) {
+              polylineSegment.add(LatLng(point.latitude, point.longitude));
+            }
+          } else {
+            print("Error fetching polyline: ${result.errorMessage}");
+          }
         }
 
+        allPolylines.add(polylineSegment);
+      }
+
+      // Clear previous polylines
+      polylineCoordinates.clear();
+
+      // Merge all segments into one polyline for display
+      for (var segment in allPolylines) {
+        polylineCoordinates.addAll(segment);
+      }
+
+      if (polylineCoordinates.isNotEmpty) {
+        print("Polyline coordinates: $polylineCoordinates");
         _startAnimation(); // Start animating the polyline
       } else {
-        print("Error: ${result.errorMessage}");
+        print("No polyline coordinates to animate.");
       }
     }
   }
 
   void _updatePolyline() {
+    print("Updating polyline...");
     setState(() {
       _polylines.clear();
       _polylines.add(
