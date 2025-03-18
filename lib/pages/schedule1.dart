@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lokamotive/dashboard_page.dart';
 import 'package:lokamotive/pages/schedule2.dart';
+import 'package:lokamotive/pages/schedule2LRTFrom.dart';
+import 'package:lokamotive/pages/schedule2MRT.dart';
 
 class Schedule1 extends StatelessWidget {
   const Schedule1({super.key});
@@ -67,13 +69,13 @@ class ReturnButton extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(PageRouteBuilder(
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                  DashboardPage(
-                    email: GlobalData.email,
-                    userName: GlobalData.userName,
-                    onNameChanged: (newName) {
-                      print("name updated");
-                    },
-                  ),
+                    DashboardPage(
+                  email: GlobalData.email,
+                  userName: GlobalData.userName,
+                  onNameChanged: (newName) {
+                    print("name updated");
+                  },
+                ),
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) {
                   return SlideTransition(
@@ -244,7 +246,7 @@ class BottomFunc extends StatelessWidget {
                     onSelect: () {
                       Navigator.of(context).push(PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            Schedule2(),
+                            Schedule2LRTFrom(),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
                           return SlideTransition(
@@ -267,7 +269,7 @@ class BottomFunc extends StatelessWidget {
                     onSelect: () {
                       Navigator.of(context).push(PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) =>
-                            Schedule2(),
+                            Schedule2MRT(),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
                           return SlideTransition(

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:lokamotive/pages/schedule3.dart';
+import 'package:lokamotive/pages/schedule2LRTTo.dart';
 import 'schedule1.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 
-class Schedule2 extends StatefulWidget {
-  const Schedule2({super.key});
+class Schedule2LRTFrom extends StatefulWidget {
+  const Schedule2LRTFrom({super.key});
 
   @override
   _Schedule2State createState() => _Schedule2State();
 }
 
-class _Schedule2State extends State<Schedule2> {
+class _Schedule2State extends State<Schedule2LRTFrom> {
   List<String> stationNames = [];
   String selectedStation = "Departure Station";
   String searchQuery = "";
@@ -29,12 +29,19 @@ class _Schedule2State extends State<Schedule2> {
   }
 
   Future<void> loadStations() async {
-    String data = await rootBundle.loadString('assets/station.json');
-    Map<String, dynamic> jsonData = json.decode(data);
-    List<dynamic> stations = jsonData['data'];
+    // Load the JSON file
+    String data = await rootBundle.loadString('assets/scheduleDataLRT.json');
+    List<dynamic> jsonData = json.decode(data);
+
+    Set<String> uniqueStations = Set();
+
+    for (var schedule in jsonData) {
+      uniqueStations.add(schedule['from']);
+      uniqueStations.add(schedule['to']);
+    }
+
     setState(() {
-      stationNames =
-          stations.map((station) => station['name'].toString()).toList();
+      stationNames = uniqueStations.toList();
     });
   }
 
@@ -503,7 +510,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                             .push(PageRouteBuilder(
                                           pageBuilder: (context, animation,
                                                   secondaryAnimation) =>
-                                              Schedule3(
+                                              Schedule2LRTTo(
                                             selectedStation:
                                                 widget.selectedStation,
                                             updateSearchQuery:
@@ -596,14 +603,14 @@ class _SearchScheduleState extends State<SearchSchedule> {
                   Container(
                     width: MediaQuery.of(context).size.width * 0.05,
                   ),
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
                     height: MediaQuery.of(context).size.height * 0.1,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
+                        SizedBox(
                             width: MediaQuery.of(context).size.width * 0.6,
                             height: MediaQuery.of(context).size.height * 0.03,
                             child: const Column(
