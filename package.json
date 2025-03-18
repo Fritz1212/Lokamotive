@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "csv-parse": "^5.6.0",
+    "fs-js": "^1.0.6",
+    "heap-js": "^2.6.0",
+    "moment": "^2.30.1"
+  }
+}
