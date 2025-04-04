@@ -15,7 +15,7 @@ class _AccountRegistrationState extends State<AccountRegistration> {
   @override
   void initState() {
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://192.168.115.24:3000');
+    channel = IOWebSocketChannel.connect('ws://10.68.108.159:3000');
   }
 
   void sendAccount(String message) {
@@ -168,28 +168,32 @@ class _AccountRegistrationState extends State<AccountRegistration> {
                   ),
                 ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Already have an Account? ",
-                        style: TextStyle(fontSize: 14, color: Colors.black54)),
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SigninPage())),
-                      child: Text(
-                        "Sign In",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFF28A33),
-                          decoration: TextDecoration.underline,
-                          decorationColor: Color(0xFFF28A33),
+                Container(
+                  height: 40,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Already have an Account? ",
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.black54)),
+                      GestureDetector(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SigninPage())),
+                        child: Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFF28A33),
+                            decoration: TextDecoration.underline,
+                            decorationColor: Color(0xFFF28A33),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 )
               ],
             ),
@@ -283,7 +287,7 @@ class RegisterImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 350,
+      height: 300,
       width: 500,
       child: Image.asset(
         'assets/Mobile login-amico 1.png',

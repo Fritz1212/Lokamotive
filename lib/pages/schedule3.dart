@@ -6,7 +6,7 @@ class Schedule3 extends StatefulWidget {
   final String selectedStation;
   final Function(String) updateSearchQuery;
   final String scheduleText;
-  
+
   const Schedule3({
     Key? key,
     required this.selectedStation,
@@ -37,27 +37,26 @@ class _Schedule3State extends State<Schedule3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Expanded(
-              child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              TopFunc(),
-              SearchSchedule(
-                selectedStation: widget.selectedStation, 
-                onSearchQueryChanged: widget.updateSearchQuery, 
-                onScheduleUpdated: widget.scheduleText,
-                isReadOnly: true,
-              ),
-              ReturnButton(),
-            ],
-          )),
-          DestinationFunc(),
-        ],
-      )
-    );
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: [
+            Expanded(
+                child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                TopFunc(),
+                SearchSchedule(
+                  selectedStation: widget.selectedStation,
+                  onSearchQueryChanged: widget.updateSearchQuery,
+                  onScheduleUpdated: widget.scheduleText,
+                  isReadOnly: true,
+                ),
+                ReturnButton(),
+              ],
+            )),
+            DestinationFunc(),
+          ],
+        ));
   }
 }
 
@@ -189,7 +188,8 @@ class TrainRouteCard extends StatelessWidget {
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.1,
-                                height: MediaQuery.of(context).size.height * 0.043,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.043,
                                 child: Image.asset("assets/Vector(3).png"),
                               ),
                               Center(
@@ -208,7 +208,7 @@ class TrainRouteCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.09,
+                    width: MediaQuery.of(context).size.width * 0.07,
                     child: Image.asset("assets/Vector(2).png"),
                   ),
                 ],

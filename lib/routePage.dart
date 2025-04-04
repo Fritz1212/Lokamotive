@@ -16,7 +16,7 @@ class RoutePage extends StatefulWidget {
 class RoutePageState extends State<RoutePage> {
   final TextEditingController _controller = TextEditingController();
   final _channel =
-      WebSocketChannel.connect(Uri.parse('ws://192.168.115.24:3000'));
+      WebSocketChannel.connect(Uri.parse('ws://10.68.108.159:3000'));
   List<dynamic> suggestions = [];
 
   @override
@@ -63,6 +63,7 @@ class RoutePageState extends State<RoutePage> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Container(
           height: double.infinity,
@@ -139,23 +140,29 @@ class RoutePageState extends State<RoutePage> {
                         child: Column(
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
 
-                                  builder: (context) =>
-                                      MapPage(), // Ganti dengan halaman tujuan
-                                );
-                              },
-                              child: Container(
-                                width: 287 / 412 * screenWidth,
-                                height: 122 / 917 * screenHeight,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
-                            ),
+                                    builder: (context) =>
+                                        MapPage(), // Ganti dengan halaman tujuan
+                                  );
+                                },
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => MapPage());
+                                  },
+                                  child: Container(
+                                    width: 287 / 412 * screenWidth,
+                                    height: 122 / 917 * screenHeight,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ),
+                                )),
                             Container(
                               margin:
                                   EdgeInsets.only(top: 16 / 917 * screenHeight),

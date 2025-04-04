@@ -81,11 +81,16 @@ flutter:
     - assets/Icon/route_icon.svg
     - assets/Icon/person_icon.svg
     - assets/iconspng/backRutePage.png
+    - assets/Icon/user_profile_icon.svg
+    - assets/Icon/edit_profile_icon.svg
     - assets/iconspng/locationIconRutePage.png
     - assets/iconspng/searchIconRutePage.png
     - assets/test.png
     - assets/iconspng/krlIcon.png
     - assets/iconspng/tjIcon.png
+    - assets/iconspng/backMapPage.png
+    - assets/iconspng/navIconMapPage.png
+    - assets/GAMBARSAKRAL.png
 
 
 

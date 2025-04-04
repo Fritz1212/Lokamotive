@@ -119,18 +119,18 @@ class RutePage2 extends StatelessWidget {
                 children: [
                   _buildCategoryHeader("All Routes"),
                   SizedBox(height: 8 / 917 * screenHeight),
-                  ElevatedButton(
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailPage(
+                          asal: asal(),
+                          tujuan: tujuan(),
+                        ),
+                      ),
+                    ),
                     child: _buildRouteItem(
                         "150", "Bogor", "Karet", "30", "10000", false, false),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DetailPage(
-                                    asal: asal(),
-                                    tujuan: tujuan(),
-                                  )));
-                    },
                   ),
                   _buildRouteItem("200", "Bogor", "Tanah Abang 2", "30",
                       "12000", false, false),

@@ -165,7 +165,7 @@ class TrainRouteCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.09,
+                    width: MediaQuery.of(context).size.width * 0.07,
                     child: Image.asset("assets/Vector(2).png"),
                   ),
                 ],

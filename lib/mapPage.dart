@@ -12,8 +12,8 @@ class MapPage extends StatelessWidget {
         children: [
           // Peta
           Positioned.fill(
-            child: Image.network(
-              'https://tile.openstreetmap.org/10/567/389.png', // Placeholder untuk OpenStreetMap
+            child: Image.asset(
+              'assets/GAMBARSAKRAL.png', // Placeholder untuk OpenStreetMap
               fit: BoxFit.cover,
             ),
           ),

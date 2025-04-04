@@ -1,41 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart' as location;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
-import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
 
 class GlobalonPage {
   static String onPage = '';
+  static var decodedMessage;
 }
 
 class WebSocketService {
   final String serverUrl =
-      "ws://192.168.115.24:3000"; // Change to your actual server URL
+      "ws://10.68.108.159:3000"; // Change to your actual server URL
   late WebSocketChannel channel;
   Function(dynamic)? onMessageReceived;
 
+  //3. Ambil pake ni function
   void connect() {
     channel = WebSocketChannel.connect(Uri.parse(serverUrl));
     channel.stream.listen((message) {
       print("Received: $message");
       if (onMessageReceived != null) {
-        onMessageReceived!(jsonDecode(message));
+        print("Pesan Sedang di decode");
+        GlobalonPage.decodedMessage = onMessageReceived!(jsonDecode(message));
       }
     }, onDone: () {
-      print("WebSocket closed.");
+      print("Berhasil Dapet Data !");
     }, onError: (error) {
-      print("WebSocket error: $error");
+      print("Error Ngambil Data: $error");
     });
   }
 
+  //2. format pengirim request ke server (action udah getRecommendedRoutes)
   void sendGetRecommendedRoutes(String userId, String start, String destination,
       {String? preference}) {
     final data = {
@@ -46,12 +47,9 @@ class WebSocketService {
       "preference": preference ?? "default"
     };
 
+    //gas kirim
     channel.sink.add(jsonEncode(data));
   }
-
-  // void disconnect() {
-  //   channel.sink.close(status.normalClosure);
-  // }
 }
 
 class GoogleMapWidget extends StatefulWidget {
@@ -67,14 +65,13 @@ class GoogleMapWidget extends StatefulWidget {
 class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   late GoogleMapController mapController;
   final WebSocketService wsService = WebSocketService();
+  final String _apiKey = "AIzaSyDCQcVU2E2VKsb2cn-FYiE1Jry0IHsSe2o";
   List<dynamic> routes = [];
 
-  late LatLng _center = LatLng(-6.585267761752595, 106.88177004571635);
+  late LatLng _currentLocation;
   late LatLng _target;
-  final String _apiKey = "AIzaSyDCQcVU2E2VKsb2cn-FYiE1Jry0IHsSe2o";
+  late String _currentLocationName = '';
 
-  LatLng? _currentLocation;
-  String _currentLocationName = '';
   List<Marker> _markers = [];
   BitmapDescriptor? _customIcon;
 
@@ -91,56 +88,38 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     GlobalonPage.onPage = widget.onPage;
     wsService.connect();
     _initializeTarget();
-    wsService.onMessageReceived = (data) {
-      setState(() {
-        if (data["routes"] != null) {
-          routes = data["routes"];
-        }
-      });
-    };
+    _getCurrentLocation();
+    _getRoute();
   }
 
   @override
   void dispose() {
-    // wsService.disconnect();
     super.dispose();
   }
 
-  Future<List<Map<String, dynamic>>> getRoutes() async {
-    wsService.sendGetRecommendedRoutes(
-        "user123", _currentLocationName, widget.target,
-        preference: "fastest");
-
-    // Wait for the routes to be received
-    await Future.delayed(Duration(seconds: 2));
-
-    // Assuming routes are received and stored in the `routes` variable
-    return routes.map((route) {
-      return {
-        'coordinates': route['coordinates'].map((coord) {
-          return LatLng(coord['lat'], coord['lng']);
-        }).toList()
-      };
-    }).toList();
-  }
-
+  //4. Siapin latitude longitude dari target
   Future<void> _initializeTarget() async {
-    print("Entering _initializeTarget function");
+    print("Inisiasi Target (mendapatkan latitude longitude target)");
     try {
       _target = await _getLatLngFromPlaceName(widget.target);
       setState(() {
         _isTargetInitialized = true;
       });
-
-      setState(
-        () async {
-          await _getCurrentLocation(); // Call _getCurrentLocation after initializing the target
-          _getRoute();
-        },
-      );
     } catch (e) {
-      print('Error: $e');
+      print('Koordinat target tidak ditemukan: $e');
     }
+  }
+
+  //1. request buat dapetin rute dar server
+  Future<List<Map<String, dynamic>>> requestFormatedRoute() async {
+    wsService.sendGetRecommendedRoutes(
+        "user123", _currentLocationName, widget.target,
+        preference: "fastest");
+
+    await Future.delayed(Duration(seconds: 2));
+
+    // return hasil formmatedRoutes
+    return GlobalonPage.decodedMessage;
   }
 
   Future<LatLng> _getLatLngFromPlaceName(String placeName) async {
@@ -165,7 +144,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       final data = json.decode(response.body);
       List results = data['results'];
 
-      _customIcon = await BitmapDescriptor.fromAssetImage(
+      _customIcon = await BitmapDescriptor.asset(
         ImageConfiguration(size: Size(48, 48)),
         'assets/train_station_icon.png',
       );
@@ -194,38 +173,35 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-
     String placeName = '';
 
-    _fetchNearbyTrainStations(position.latitude, position.longitude);
+    final LocationSettings locationSettings =
+        LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 100);
+
+    Position positionUser =
+        await Geolocator.getCurrentPosition(locationSettings: locationSettings);
+
+    _currentLocation = LatLng(positionUser.latitude, positionUser.longitude);
+
+    //tunjukin semua stasiun kereta terdekat
+    _fetchNearbyTrainStations(positionUser.latitude, positionUser.longitude);
 
     try {
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          positionUser.latitude, positionUser.longitude);
       if (placemarks.isNotEmpty) {
         Placemark place = placemarks.first;
-        placeName = "${place.name}, ${place.locality}, ${place.country}";
+        placeName = "${place.name}";
         _currentLocationName = placeName;
       }
     } catch (e) {
-      print("Error getting place name: $e");
-    }
-
-    if (mounted) {
-      setState(() {
-        _currentLocation = LatLng(position.latitude, position.longitude);
-
-        print("Current location: $_currentLocationName");
-      });
+      print("Nama lokasi tidak ditemukan: $e");
     }
   }
 
   Future<void> _fetchRoute() async {
     String url = "https://maps.googleapis.com/maps/api/directions/json?"
-        "origin=${_center.latitude},${_center.longitude}&"
+        "origin=${_currentLocation.latitude},${_currentLocation.longitude}&"
         "destination=${_target.latitude},${_target.longitude}&"
         "key=$_apiKey";
 
@@ -307,19 +283,19 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
     LatLngBounds bounds = LatLngBounds(
       southwest: LatLng(
-        _center.latitude < _target.latitude
-            ? _center.latitude
+        _currentLocation.latitude < _target.latitude
+            ? _currentLocation.latitude
             : _target.latitude,
-        _center.longitude < _target.longitude
-            ? _center.longitude
+        _currentLocation.longitude < _target.longitude
+            ? _currentLocation.longitude
             : _target.longitude,
       ),
       northeast: LatLng(
-        _center.latitude > _target.latitude
-            ? _center.latitude
+        _currentLocation.latitude > _target.latitude
+            ? _currentLocation.latitude
             : _target.latitude,
-        _center.longitude > _target.longitude
-            ? _center.longitude
+        _currentLocation.longitude > _target.longitude
+            ? _currentLocation.longitude
             : _target.longitude,
       ),
     );
@@ -330,20 +306,23 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   void _getRoute() async {
     PolylinePoints polylinePoints = PolylinePoints();
-    print("tempat : $_currentLocationName");
     if (GlobalonPage.onPage == "detailPage") {
-      if (_currentLocationName == null || _currentLocationName.isEmpty) {
+      if (_currentLocationName.isEmpty) {
         print("Error: _currentLocationName is not set.");
         return;
       }
 
       // Fetch nearby train stations
-      _fetchNearbyTrainStations(_center.latitude, _center.longitude);
+      try {
+        _fetchNearbyTrainStations(
+            _currentLocation.latitude, _currentLocation.longitude);
+        print("Stasiun terdekat berhasil ditampilkan");
+      } catch (e) {
+        print("Gagal menampilkan stasiun terdekat: $e");
+      }
 
-      print("masuk sini");
-
-      // Send route request and get formatted routes
-      List<Map<String, dynamic>> formattedRoutes = await getRoutes();
+      // kirim route request
+      List<Map<String, dynamic>> formattedRoutes = await requestFormatedRoute();
 
       List<List<LatLng>> allPolylines = []; // Store multiple polylines
 
@@ -430,7 +409,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       onMapCreated: _onMapCreated,
       polylines: _polylines,
       initialCameraPosition: CameraPosition(
-        target: _center,
+        target: _currentLocation,
         zoom: 11.0,
       ),
       markers: {
@@ -438,7 +417,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
           Marker(
             markerId: MarkerId('Your Location'),
             icon: BitmapDescriptor.defaultMarker,
-            position: _center,
+            position: _currentLocation,
           ),
         if (GlobalonPage.onPage == "detailPage")
           Marker(

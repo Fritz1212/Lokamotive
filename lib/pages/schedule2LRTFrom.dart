@@ -235,6 +235,7 @@ class TimePickerButton extends StatelessWidget {
                   children: [
                     Text(
                       labelText,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w300,
@@ -689,7 +690,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                             SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 height:
-                                    MediaQuery.of(context).size.height * 0.05,
+                                    MediaQuery.of(context).size.height * 0.07,
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -700,6 +701,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: Color.fromARGB(89, 0, 0, 0)),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                       Text(
                                         widget.onScheduleUpdated.isNotEmpty
@@ -709,6 +711,7 @@ class _SearchScheduleState extends State<SearchSchedule> {
                                           fontSize: 17,
                                           color: Colors.black,
                                         ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ])),
                           ],
@@ -751,7 +754,8 @@ class TrainContainer extends StatelessWidget {
               Center(
                 child: Text(
                   text,
-                  style: const TextStyle(fontSize: 15),
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 14),
                 ),
               ),
             ],

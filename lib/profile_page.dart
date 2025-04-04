@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lokamotive/preferencePage.dart';
 import 'edit_profile_page.dart';
 import 'navbar.dart';
 import 'dashboard_page.dart';
@@ -158,10 +159,18 @@ class _ProfilePageState extends State<ProfilePage> {
                               });
                             }
                           }),
-                          _buildProfileOption(
-                            'Edit Transportation Preference',
-                            () => print('Edit Transportation tapped'),
-                          ),
+                          _buildProfileOption('Edit Transportation Preference',
+                              () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      TransportationPreferenceScreen(
+                                        userName: GlobalData.userName,
+                                        onNameChanged: (String value) {},
+                                        email: GlobalData.email,
+                                      )),
+                            );
+                          }),
                           _buildProfileOption(
                             'Change Password',
                             () => print('Change Password tapped'),

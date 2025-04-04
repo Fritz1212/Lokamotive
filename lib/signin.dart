@@ -21,7 +21,7 @@ class _SigninPageState extends State<SigninPage> {
   @override
   void initState() {
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://192.168.115.24:3000');
+    channel = IOWebSocketChannel.connect('ws://10.68.108.159:3000');
   }
 
   void sendAccount(String message) {
