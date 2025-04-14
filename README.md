@@ -4,7 +4,18 @@ Instruksi Pengunaan Aplikasi Lokamotive
 2. Buka Folder pada vscode kemudian buka file main.dart
 3. Pastikan Device HP dan Komputer atau laptop terdapat pada jaringan yang sama 
 4. Buka File .env dan isi bagian IP_ADDRESS dengan ip dari jaringan yang sedang digunakan
-6. Import File sql yang sudah diberikan (lokamotive.sql)
-5. Run project ini dengan menekan F5 ataupun mengetik "flutter run" pada terminal
-6. Lakukan Register
-7. Aplikasi Siap Digunakan
+5. Download XAMPP untuk mengimport databasenya
+6. Pada XAMPP nyalakan Apache dan MySQL
+7. Import File sql yang sudah diberikan (lokamotive.sql) dengan memberi nama lokamotive
+8. Berikan akses koneksi database dengan membuat profile dengan pada aplikasi XAMPP, buka bagian tab user account kemudian klik login information 
+9. Isi seperti ini :
+Username : lokamotiveBINUS
+Hostname : localhost
+Password : lokamotive123
+10. Download node.js dan NPM melalui browser
+11. Change directory terminal ke /lib
+12. ketik npm install
+13. lakukan command "node server.js"
+14. Run project ini dengan menekan F5 ataupun mengetik "flutter run" pada terminal
+15. Lakukan Register
+16. Aplikasi Siap Digunakan
