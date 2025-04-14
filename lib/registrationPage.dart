@@ -3,6 +3,7 @@ import 'package:lokamotive/preferencePage.dart';
 import 'package:lokamotive/signin.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AccountRegistration extends StatefulWidget {
   @override
@@ -14,8 +15,9 @@ class _AccountRegistrationState extends State<AccountRegistration> {
 
   @override
   void initState() {
+    String ip = dotenv.get('IP_ADDRESS');
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://172.20.10.2:3000');
+    channel = IOWebSocketChannel.connect('ws://${ip}:3000');
   }
 
   void sendAccount(String message) {

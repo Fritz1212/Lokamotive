@@ -4,6 +4,7 @@ import 'package:lokamotive/dashboard_page.dart';
 import 'package:lokamotive/registrationPage.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SigninPage extends StatefulWidget {
   @override
@@ -20,8 +21,9 @@ class _SigninPageState extends State<SigninPage> {
 
   @override
   void initState() {
+    String ip = dotenv.get('IP_ADDRESS');
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://172.20.10.2:3000');
+    channel = IOWebSocketChannel.connect('ws://${ip}:3000');
   }
 
   void sendAccount(String message) {

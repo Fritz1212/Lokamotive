@@ -5,6 +5,7 @@ import 'expendaleCard.dart';
 import 'mapPage.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RoutePage extends StatefulWidget {
   RoutePage({super.key});
@@ -15,12 +16,16 @@ class RoutePage extends StatefulWidget {
 
 class RoutePageState extends State<RoutePage> {
   final TextEditingController _controller = TextEditingController();
-  final _channel = WebSocketChannel.connect(Uri.parse('ws://172.20.10.2:3000'));
+  var _channel = WebSocketChannel.connect(Uri.parse('ws://172.20.10.2:3000'));
   List<dynamic> suggestions = [];
 
   @override
   void initState() {
     super.initState();
+    String ip = dotenv.get('IP_ADDRESS');
+    if (ip != null) {
+      _channel = WebSocketChannel.connect(Uri.parse('ws://$ip:3000'));
+    }
     _channel.stream.listen((message) {
       final Map<String, dynamic> data = jsonDecode(message);
       print("${message}");

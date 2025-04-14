@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GlobalonPage {
   static String onPage = '';
@@ -15,8 +16,8 @@ class GlobalonPage {
 }
 
 class WebSocketService {
-  final String serverUrl =
-      'ws://172.20.10.2:3000'; // Change to your actual server URL
+  final String ip = dotenv.get('IP_ADDRESS');
+  late String serverUrl = 'ws://${ip}:3000'; // Change to your actual server URL
   late WebSocketChannel channel;
   Function(dynamic)? onMessageReceived;
 
