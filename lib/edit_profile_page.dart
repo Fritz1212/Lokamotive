@@ -113,7 +113,7 @@
 //         'email': _emailController.text,
 //         'profileImage': _profileImage,
 //       });
-      
+
 //       ScaffoldMessenger.of(context).showSnackBar(
 //         const SnackBar(content: Text('Profile updated successfully')),
 //       );
@@ -202,8 +202,8 @@
 
 //               SizedBox(height: MediaQuery.of(context).size.height * 0.07),
 //               const Divider(
-//                 color: Color.fromARGB(102, 0, 0, 0), 
-//                 thickness: 1.5, 
+//                 color: Color.fromARGB(102, 0, 0, 0),
+//                 thickness: 1.5,
 //                 height: 1,
 //               ),
 //               SizedBox(height: MediaQuery.of(context).size.height * 0.03),
@@ -295,8 +295,8 @@
 //           mainAxisSize: MainAxisSize.min,
 //           children: [
 //             const Divider(
-//               color: Color.fromARGB(102, 0, 0, 0), 
-//               thickness: 1.5, 
+//               color: Color.fromARGB(102, 0, 0, 0),
+//               thickness: 1.5,
 //               height: 1,
 //             ),
 //             SizedBox(height: MediaQuery.of(context).size.height * 0.03),
@@ -357,7 +357,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://10.68.110.167:3000');
+    channel = IOWebSocketChannel.connect('ws://172.20.10.2:3000');
   }
 
   void sendAccount(String message) {
@@ -424,7 +424,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       final email = _emailController.text;
 
       // Kirim data ke WebSocket
-      final message = '{"action": "EditProfile", "user_name": "${_nameController.text}", "email": "${_emailController.text}", "old_email": "${GlobalData.email}"}';
+      final message =
+          '{"action": "EditProfile", "user_name": "${_nameController.text}", "email": "${_emailController.text}", "old_email": "${GlobalData.email}"}';
       sendAccount(message);
 
       GlobalData.userName = _nameController.text;
@@ -561,7 +562,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
                   }
-                  final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                  final emailRegex = RegExp(
+                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
                   if (!emailRegex.hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
@@ -577,7 +579,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text('Submit', style: TextStyle(color: Colors.white, fontSize: 20)),
+                child: const Text('Submit',
+                    style: TextStyle(color: Colors.white, fontSize: 20)),
               ),
             ],
           ),

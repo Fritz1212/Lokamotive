@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lokamotive/detailPage.dart';
 import 'package:lokamotive/google_map.dart';
-// import 'package:http/http.dart' as http;
 import 'package:lokamotive/main.dart';
 import 'package:lokamotive/mapPage.dart';
 import 'routePage.dart';
-import 'detailPage.dart';
 
 class RutePage2 extends StatelessWidget {
   final String lokasiTujuan;

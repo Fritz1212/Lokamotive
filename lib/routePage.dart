@@ -15,8 +15,7 @@ class RoutePage extends StatefulWidget {
 
 class RoutePageState extends State<RoutePage> {
   final TextEditingController _controller = TextEditingController();
-  final _channel =
-      WebSocketChannel.connect(Uri.parse('ws://10.68.108.159:3000'));
+  final _channel = WebSocketChannel.connect(Uri.parse('ws://172.20.10.2:3000'));
   List<dynamic> suggestions = [];
 
   @override

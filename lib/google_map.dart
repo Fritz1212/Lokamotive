@@ -16,34 +16,85 @@ class GlobalonPage {
 
 class WebSocketService {
   final String serverUrl =
-      "ws://10.68.108.159:3000"; // Change to your actual server URL
+      'ws://172.20.10.2:3000'; // Change to your actual server URL
   late WebSocketChannel channel;
   Function(dynamic)? onMessageReceived;
+
+  Completer<List<Map<String, dynamic>>>? routeCompleter;
 
   //3. Ambil pake ni function
   void connect() {
     channel = WebSocketChannel.connect(Uri.parse(serverUrl));
+
     channel.stream.listen((message) {
-      print("Received: $message");
-      if (onMessageReceived != null) {
-        print("Pesan Sedang di decode");
-        GlobalonPage.decodedMessage = onMessageReceived!(jsonDecode(message));
+      print("📩 Received: $message");
+
+      dynamic decoded;
+
+      try {
+        decoded = jsonDecode(message);
+      } catch (e) {
+        print("❌ Failed to decode message: $e");
+        routeCompleter?.completeError(Exception("Invalid JSON"));
+        return;
       }
-    }, onDone: () {
-      print("Berhasil Dapet Data !");
-    }, onError: (error) {
-      print("Error Ngambil Data: $error");
+
+      print("🔍 Decoded: (${decoded.runtimeType})");
+
+      if (decoded is List) {
+        try {
+          final routes = decoded.cast<Map<String, dynamic>>();
+          if (routeCompleter != null && !routeCompleter!.isCompleted) {
+            routeCompleter!.complete(routes);
+            print("✅ Route completer completed with: $routes");
+          }
+        } catch (e) {
+          print("❌ Error casting list elements: $e");
+          routeCompleter
+              ?.completeError(Exception("Casting to List<Map> failed"));
+        }
+      } else if (decoded is Map && decoded['status'] == 'error') {
+        // Server returned an error message
+        print("❌ Server error: ${decoded['message']}");
+        return;
+      } else {
+        print("⚠️ Unexpected response type: ${decoded.runtimeType}");
+        routeCompleter?.completeError(Exception("Unexpected response format"));
+      }
+
+      // Clean up
+      routeCompleter = null;
+
+      // Forward to message handler if defined
+      if (onMessageReceived != null) {
+        try {
+          GlobalonPage.decodedMessage = onMessageReceived!(decoded);
+        } catch (e) {
+          print("❌ Error in onMessageReceived: $e");
+        }
+      }
     });
   }
 
   //2. format pengirim request ke server (action udah getRecommendedRoutes)
-  void sendGetRecommendedRoutes(String userId, String start, String destination,
+  void sendGetRecommendedRoutes(
+      String userId,
+      String? start,
+      String destination,
+      double _currentLocationLat,
+      double _currentLocationLang,
+      double _targetLat,
+      double _targetLang,
       {String? preference}) {
     final data = {
       "action": "getRecommendedRoutes",
       "userId": userId,
       "start": start,
       "destination": destination,
+      "startLat": _currentLocationLat,
+      "startLng": _currentLocationLang,
+      "destinationLat": _targetLat,
+      "destinationLng": _targetLang,
       "preference": preference ?? "default"
     };
 
@@ -65,14 +116,14 @@ class GoogleMapWidget extends StatefulWidget {
 class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   late GoogleMapController mapController;
   final WebSocketService wsService = WebSocketService();
-  final String _apiKey = "AIzaSyDCQcVU2E2VKsb2cn-FYiE1Jry0IHsSe2o";
+  final String _apiKey = "AIzaSyDAgMexUNwu84Kd5IqC-Kg97ZX7dsACV18";
   List<dynamic> routes = [];
 
-  late LatLng _currentLocation;
+  LatLng? _currentLocation = LatLng(-6.2088, 106.8456);
   late LatLng _target;
-  late String _currentLocationName = '';
+  String? _currentLocationName;
 
-  List<Marker> _markers = [];
+  Set<Marker> _markers = {};
   BitmapDescriptor? _customIcon;
 
   List<LatLng> polylineCoordinates = [];
@@ -87,14 +138,21 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     super.initState();
     GlobalonPage.onPage = widget.onPage;
     wsService.connect();
-    _initializeTarget();
-    _getCurrentLocation();
-    _getRoute();
+
+    if (GlobalonPage.onPage == "detailPage") {
+      _init();
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> _init() async {
+    await _initializeTarget();
+    await _getCurrentLocation();
+    await _getRoute();
   }
 
   //4. Siapin latitude longitude dari target
@@ -112,14 +170,32 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   //1. request buat dapetin rute dar server
   Future<List<Map<String, dynamic>>> requestFormatedRoute() async {
+    if (_currentLocation == null) {
+      throw Exception("Current location not set.");
+    }
+
+    wsService.routeCompleter = Completer<List<Map<String, dynamic>>>();
+
     wsService.sendGetRecommendedRoutes(
-        "user123", _currentLocationName, widget.target,
-        preference: "fastest");
+      "user123",
+      _currentLocationName,
+      widget.target,
+      _currentLocation!.latitude,
+      _currentLocation!.longitude,
+      _target.latitude,
+      _target.longitude,
+      preference: "jalan kaki",
+    );
 
-    await Future.delayed(Duration(seconds: 2));
+    print("🚀 Sent route request, waiting.....");
 
-    // return hasil formmatedRoutes
-    return GlobalonPage.decodedMessage;
+    return wsService.routeCompleter!.future.timeout(
+      Duration(seconds: 20),
+      onTimeout: () {
+        print("⏰ Timeout waiting for route data");
+        throw Exception("Timeout waiting for route");
+      },
+    );
   }
 
   Future<LatLng> _getLatLngFromPlaceName(String placeName) async {
@@ -145,7 +221,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       List results = data['results'];
 
       _customIcon = await BitmapDescriptor.asset(
-        ImageConfiguration(size: Size(48, 48)),
+        ImageConfiguration(size: Size(10, 10)),
         'assets/train_station_icon.png',
       );
 
@@ -200,8 +276,13 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   Future<void> _fetchRoute() async {
+    if (_currentLocation == null || _target == null) {
+      print("Error: Location data not ready.");
+      return;
+    }
+
     String url = "https://maps.googleapis.com/maps/api/directions/json?"
-        "origin=${_currentLocation.latitude},${_currentLocation.longitude}&"
+        "origin=${_currentLocation!.latitude},${_currentLocation!.longitude}&"
         "destination=${_target.latitude},${_target.longitude}&"
         "key=$_apiKey";
 
@@ -252,7 +333,6 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   /// Starts polyline animation by adding points gradually
-  /// Starts polyline animation by adding points gradually
   void _startAnimation() {
     print("Starting polyline animation...");
     if (polylineCoordinates.isEmpty) {
@@ -283,19 +363,19 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
     LatLngBounds bounds = LatLngBounds(
       southwest: LatLng(
-        _currentLocation.latitude < _target.latitude
-            ? _currentLocation.latitude
+        _currentLocation!.latitude < _target.latitude
+            ? _currentLocation!.latitude
             : _target.latitude,
-        _currentLocation.longitude < _target.longitude
-            ? _currentLocation.longitude
+        _currentLocation!.longitude < _target.longitude
+            ? _currentLocation!.longitude
             : _target.longitude,
       ),
       northeast: LatLng(
-        _currentLocation.latitude > _target.latitude
-            ? _currentLocation.latitude
+        _currentLocation!.latitude > _target.latitude
+            ? _currentLocation!.latitude
             : _target.latitude,
-        _currentLocation.longitude > _target.longitude
-            ? _currentLocation.longitude
+        _currentLocation!.longitude > _target.longitude
+            ? _currentLocation!.longitude
             : _target.longitude,
       ),
     );
@@ -304,71 +384,160 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         .animateCamera(CameraUpdate.newLatLngBounds(bounds, 175)); //padding
   }
 
-  void _getRoute() async {
-    PolylinePoints polylinePoints = PolylinePoints();
-    if (GlobalonPage.onPage == "detailPage") {
-      if (_currentLocationName.isEmpty) {
-        print("Error: _currentLocationName is not set.");
+  Future<void> _getRoute() async {
+    try {
+      print("plis lah ampe sini ${GlobalonPage.onPage}");
+
+      final sanitizedRaw = await requestFormatedRoute()
+          .timeout(Duration(seconds: 30), onTimeout: () {
+        print("⏰ Timeout waiting for route response!");
+        throw Exception("Route request timed out.");
+      });
+
+      if (sanitizedRaw is! List) {
+        print("❌ ERROR: Expected List but got ${sanitizedRaw.runtimeType}");
         return;
       }
 
-      // Fetch nearby train stations
-      try {
-        _fetchNearbyTrainStations(
-            _currentLocation.latitude, _currentLocation.longitude);
-        print("Stasiun terdekat berhasil ditampilkan");
-      } catch (e) {
-        print("Gagal menampilkan stasiun terdekat: $e");
+      final List<dynamic> sanitized = sanitizedRaw;
+      Set<Marker> newMarkers = {};
+      List<Polyline> newPolylines = [];
+      int polylineIdCounter = 1;
+
+      TravelMode _mapMode(String mode) {
+        switch (mode.toLowerCase()) {
+          case 'walking':
+          case 'jalan kaki':
+            return TravelMode.walking;
+          case 'mrt':
+          case 'lrt':
+          case 'transjakarta':
+            return TravelMode.transit;
+          default:
+            return TravelMode.driving;
+        }
       }
 
-      // kirim route request
-      List<Map<String, dynamic>> formattedRoutes = await requestFormatedRoute();
+      final Map<String, Color> modeColors = {
+        'walking': Colors.green,
+        'jalan kaki': Colors.green,
+        'mrt': Colors.blue,
+        'lrt': Colors.purple,
+        'transjakarta': Colors.orange,
+      };
 
-      List<List<LatLng>> allPolylines = []; // Store multiple polylines
+      for (var route in sanitized) {
+        if (route is! Map || route['route'] is! Map) {
+          print("❌ Skipping invalid route: $route");
+          continue;
+        }
 
-      for (var route in formattedRoutes) {
-        List<LatLng> polylineSegment = [];
+        var path = (route['route']?['path']);
+        var segments = (route['route']?['segments']);
 
-        for (int i = 0; i < route['coordinates'].length - 1; i++) {
-          var start = route['coordinates'][i];
-          var end = route['coordinates'][i + 1];
+        if (path is! List || segments is! List) {
+          print(
+              "⚠️ Skipping: path/segments malformed: path=${path.runtimeType}, segments=${segments.runtimeType}");
+          continue;
+        }
 
-          PolylineResult result =
-              await polylinePoints.getRouteBetweenCoordinates(
+        if (path.length < 2) continue;
+
+        int segmentCount = segments.length;
+        int chunkSize = (path.length / (segmentCount + 1)).floor();
+
+        for (int i = 0; i <= segmentCount; i++) {
+          int startIdx = i * chunkSize;
+          int endIdx = ((i + 1) * chunkSize < path.length)
+              ? (i + 1) * chunkSize
+              : path.length - 1;
+
+          if (startIdx >= path.length || endIdx >= path.length) {
+            print(
+                "⚠️ Skipping segment $i: startIdx=$startIdx, endIdx=$endIdx, path.length=${path.length}");
+            continue;
+          }
+
+          var start = path[startIdx];
+          var end = path[endIdx];
+
+          if (start is! Map ||
+              end is! Map ||
+              !start.containsKey('lat') ||
+              !start.containsKey('lang') ||
+              !end.containsKey('lat') ||
+              !end.containsKey('lang')) {
+            print("❌ Invalid path points at index $startIdx and $endIdx");
+            continue;
+          }
+
+          for (int i = 0; i < path.length; i++) {
+            final point = path[i];
+            if (i + 1 == path.length) {
+              newMarkers.add(
+                Marker(
+                  markerId: MarkerId('point_$i'),
+                  position: LatLng(point['lat'], point['lang']),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueAzure),
+                ),
+              );
+            }
+            newMarkers.add(
+              Marker(
+                markerId: MarkerId('point_$i'),
+                position: LatLng(point['lat'], point['lang']),
+                icon: BitmapDescriptor.defaultMarker,
+                infoWindow: InfoWindow(title: 'Point $i'),
+              ),
+            );
+          }
+
+          String mode = 'driving';
+          if (i < segments.length) {
+            var segment = segments[i];
+            if (segment is Map && segment['mode'] != null) {
+              mode = segment['mode'].toString().toLowerCase();
+            }
+          }
+
+          var result = await PolylinePoints().getRouteBetweenCoordinates(
             googleApiKey: _apiKey,
             request: PolylineRequest(
-              origin: PointLatLng(start.latitude, start.longitude),
-              destination: PointLatLng(end.latitude, end.longitude),
-              mode: TravelMode.transit, // Change mode if needed
+              origin: PointLatLng(start['lat'], start['lang']),
+              destination: PointLatLng(end['lat'], end['lang']),
+              mode: _mapMode(mode),
             ),
           );
 
           if (result.points.isNotEmpty) {
-            for (var point in result.points) {
-              polylineSegment.add(LatLng(point.latitude, point.longitude));
-            }
+            List<LatLng> polylineSegment = result.points
+                .map((point) => LatLng(point.latitude, point.longitude))
+                .toList();
+
+            newPolylines.add(
+              Polyline(
+                polylineId: PolylineId('polyline_$polylineIdCounter'),
+                color: modeColors[mode] ?? Colors.grey,
+                width: 5,
+                points: polylineSegment,
+              ),
+            );
+            polylineIdCounter++;
           } else {
-            print("Error fetching polyline: ${result.errorMessage}");
+            print(
+                "⚠️ Polyline API failed for $mode segment: ${result.errorMessage}");
           }
         }
-
-        allPolylines.add(polylineSegment);
       }
 
-      // Clear previous polylines
-      polylineCoordinates.clear();
-
-      // Merge all segments into one polyline for display
-      for (var segment in allPolylines) {
-        polylineCoordinates.addAll(segment);
-      }
-
-      if (polylineCoordinates.isNotEmpty) {
-        print("Polyline coordinates: $polylineCoordinates");
-        _startAnimation(); // Start animating the polyline
-      } else {
-        print("No polyline coordinates to animate.");
-      }
+      setState(() {
+        _polylines = Set<Polyline>.from(newPolylines);
+        _markers.addAll(newMarkers);
+      });
+    } catch (e, stack) {
+      print('💥 EXCEPTION: $e');
+      print('📍 STACK TRACE:\n$stack');
     }
   }
 
@@ -409,22 +578,10 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       onMapCreated: _onMapCreated,
       polylines: _polylines,
       initialCameraPosition: CameraPosition(
-        target: _currentLocation,
+        target: _currentLocation!,
         zoom: 11.0,
       ),
       markers: {
-        if (GlobalonPage.onPage == "detailPage")
-          Marker(
-            markerId: MarkerId('Your Location'),
-            icon: BitmapDescriptor.defaultMarker,
-            position: _currentLocation,
-          ),
-        if (GlobalonPage.onPage == "detailPage")
-          Marker(
-            markerId: MarkerId('Your Destination'),
-            icon: BitmapDescriptor.defaultMarker,
-            position: _target,
-          ),
         if (GlobalonPage.onPage == "RutePage2" && _customIcon != null)
           Marker(
             markerId: MarkerId('Custom Icon'),

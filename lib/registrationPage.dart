@@ -15,7 +15,7 @@ class _AccountRegistrationState extends State<AccountRegistration> {
   @override
   void initState() {
     super.initState();
-    channel = IOWebSocketChannel.connect('ws://10.68.108.159:3000');
+    channel = IOWebSocketChannel.connect('ws://172.20.10.2:3000');
   }
 
   void sendAccount(String message) {
