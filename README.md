@@ -16,6 +16,7 @@ Password : lokamotive123
 11. Change directory terminal ke /lib
 12. ketik npm install
 13. lakukan command "node server.js"
-14. Run project ini dengan menekan F5 ataupun mengetik "flutter run" pada terminal
-15. Lakukan Register
-16. Aplikasi Siap Digunakan
+14. ketik "flutter pub get" untuk mendapatkan dependenct
+15. Run project ini dengan menekan F5 ataupun mengetik "flutter run" pada terminal
+16. Lakukan Register
+17. Aplikasi Siap Digunakan
