@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 14, 2025 at 05:55 PM
+-- Generation Time: Apr 15, 2025 at 06:41 AM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 8.0.7
 
@@ -20,6 +20,27 @@ SET time_zone = "+00:00";
 --
 -- Database: `lokamotive`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userpreference`
+--
+
+CREATE TABLE `userpreference` (
+  `id` varchar(25) DEFAULT NULL,
+  `interaction` int(11) DEFAULT NULL,
+  `preferences` varchar(25) DEFAULT NULL,
+  `isColdStart` tinyint(1) DEFAULT NULL,
+  `embedding` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `userpreference`
+--
+
+INSERT INTO `userpreference` (`id`, `interaction`, `preferences`, `isColdStart`, `embedding`) VALUES
+('user123', 9, 'jalan kaki', 0, 0.258682132351413);
 
 -- --------------------------------------------------------
 
